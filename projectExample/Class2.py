@@ -31,3 +31,7 @@ class Class3:
 
     def method3(self, param2, param3='foo'):
         return param2, param3
+
+
+def output_function():
+    pass
