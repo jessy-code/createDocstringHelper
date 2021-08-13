@@ -1,6 +1,7 @@
 class Function:
 
-    def __init__(self):
+    def __init__(self, function_name):
+        self.__function_name = function_name
         self.__param_list = []
         self.__returns = []
         self.__raises = []

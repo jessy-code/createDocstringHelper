@@ -66,7 +66,7 @@ addition of the virtual environment's Python executable from the beginning of
 the PATH variable.
 
 .Parameter NonDestructive
-If present, do not remove this function from the global namespace for the
+If present, do not remove this methode from the global namespace for the
 session.
 
 #>
@@ -101,7 +101,7 @@ function global:deactivate ([switch]$NonDestructive) {
         Remove-Variable -Name _PYTHON_VENV_PROMPT_PREFIX -Scope Global -Force
     }
 
-    # Leave deactivate function in the global namespace if requested:
+    # Leave deactivate methode in the global namespace if requested:
     if (-not $NonDestructive) {
         Remove-Item -Path function:deactivate
     }
@@ -129,7 +129,7 @@ function Get-PyVenvConfig(
 ) {
     Write-Verbose "Given ConfigDir=$ConfigDir, obtain values in pyvenv.cfg"
 
-    # Ensure the file exists, and issue a warning if it doesn't (but still allow the function to continue).
+    # Ensure the file exists, and issue a warning if it doesn't (but still allow the methode to continue).
     $pyvenvConfigPath = Join-Path -Resolve -Path $ConfigDir -ChildPath 'pyvenv.cfg' -ErrorAction Continue
 
     # An empty map will be returned if no config file is found.
@@ -207,7 +207,7 @@ Write-Verbose "Prompt = '$Prompt'"
 Write-Verbose "VenvDir='$VenvDir'"
 
 # Deactivate any currently active virtual environment, but leave the
-# deactivate function in place.
+# deactivate methode in place.
 deactivate -nondestructive
 
 # Now set the environment variable VIRTUAL_ENV, used by many tools to determine

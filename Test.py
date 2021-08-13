@@ -1,7 +1,8 @@
 import unittest
 from Project import Project
 from Section import Section
-from PythonFiles import PythonFiles
+from PythonFiles import PythonFiles, get_object_name_by_keyword
+from Class import Class
 
 
 class MyTestCase(unittest.TestCase):
@@ -23,9 +24,16 @@ class MyTestCase(unittest.TestCase):
         with open('projectExample/Class1.py', 'r') as file:
             file_content = file.readlines()
         self.assertListEqual(p1.get_python_file_content(), file_content)
+        self.assertListEqual(get_object_name_by_keyword(p1.get_python_file_content(),'class'), ['Class1'])
 
         with self.assertRaises(FileNotFoundError):
             p2 = PythonFiles('doesnotexist')
+
+        p1.get_class_in_file()
+        self.assertListEqual(p1.get_class_in_file(), [Class('Class1')])
+
+        p2 = PythonFiles('projectExample/Class2.py')
+        self.assertListEqual(p2.get_class_in_file(), [Class('Class2'), Class('Class3')])
 
 
 if __name__ == '__main__':
