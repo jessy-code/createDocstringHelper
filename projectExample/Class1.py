@@ -11,3 +11,10 @@ class Class1:
 
     def method3(self, param2, param3='foo'):
         return param2, param3
+
+    def open_file(self, file_path):
+        try:
+            with open(file_path, 'r') as cur_file:
+                cur_file.readline()
+        except FileNotFoundError:
+            raise
