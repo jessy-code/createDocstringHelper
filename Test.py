@@ -24,7 +24,7 @@ class MyTestCase(unittest.TestCase):
         with open('projectExample/Class1.py', 'r') as file:
             file_content = file.readlines()
         self.assertListEqual(p1.get_python_file_content(), file_content)
-        self.assertListEqual(get_object_name_by_keyword(p1.get_python_file_content(),'class'), ['Class1'])
+        self.assertListEqual(get_object_name_by_keyword(p1.get_python_file_content(), 'class'), ['Class1'])
 
         with self.assertRaises(FileNotFoundError):
             p2 = PythonFiles('doesnotexist')
@@ -34,6 +34,16 @@ class MyTestCase(unittest.TestCase):
 
         p2 = PythonFiles('projectExample/Class2.py')
         self.assertListEqual(p2.get_class_in_file(), [Class('Class2'), Class('Class3')])
+
+    def test_class(self):
+        param_list_example = ['param1', 'param2', 'param3']
+
+        c1 = Class('ClassTest')
+        c1.set_param_list(param_list_example)
+        c1.set_attribute_list(param_list_example)
+        c1.write_section('Attributes', c1.get_attribute_list())
+        c1.write_section('Parameters', c1.get_param_list())
+        [self.assertIn(param, c1.get_docstring()) for param in param_list_example]
 
 
 if __name__ == '__main__':
