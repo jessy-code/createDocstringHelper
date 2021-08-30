@@ -28,17 +28,22 @@ class Class:
     def set_attribute_list(self, attribute_list):
         self.__attribute_list = attribute_list
 
+    def set_methode_list(self, methode):
+        self.__methode_list = methode
+
     def get_param_list(self):
         return self.__parm_list
 
     def get_attribute_list(self):
         return self.__attribute_list
 
+    def get_methode_list(self):
+        return self.__methode_list
+
     def get_docstring(self):
         return self.__docstring
 
-    def write_section(self, title, object_list):
-        if len(object_list) > 0:
-            self.__docstring += '\n\n' + Section(title).get_section_title()
-            self.__docstring = self.__docstring + ''.join(['\n' + cur_object + ' : <TO BE COMPLETED>\n'
-                                                           for cur_object in object_list])
+    def write_docstring(self):
+        self.__docstring += Section('Attributes', self.__attribute_list).get_writable_section() + \
+                            Section('Parameters', self.__parm_list).get_writable_section() + \
+                            Section('Methods', self.__methode_list).get_writable_section() + '"""'
