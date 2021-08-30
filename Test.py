@@ -49,6 +49,11 @@ class MyTestCase(unittest.TestCase):
 
         p2 = PythonFiles('projectExample/Class2.py')
         self.assertListEqual(p2.get_class_in_file(), [Class('Class2'), Class('Class3')])
+        p2.get_function_in_file()
+        self.assertListEqual(p2.get_function_in_file(), [Function('__init__'), Function('method1'), Function('method2'),
+                                                         Function('method3'), Function('__init__'), Function('method1'),
+                                                         Function('method2'), Function('method3'),
+                                                         Function('output_function')])
 
     def test_class(self):
         param_list_example = ['param1', 'param2', 'param3']

@@ -25,17 +25,16 @@ class PythonFiles:
         return self.__python_file_content
 
     def get_class_in_file(self):
-        self.__class_list = [Class(line.strip().split(' ')[1].replace(':', '')) for line in self.__python_file_content
-                             if re.match('^class .*:', line)]
+        self.__class_list = [Class(class_name) for class_name in get_object_name_by_keyword(self.__python_file_content,
+                                                                                            'class')]
         return self.__class_list
 
     def get_function_in_file(self):
-        # To be tested
-        self.__function_list = [Function(line.strip().split(' ')[1].replace(':', ''))
-                                for line in self.__python_file_content if re.match('^def .*:', line)]
-        return self.__class_list
+        self.__function_list = [Function(function_name) for function_name in get_object_name_by_keyword(
+            self.__python_file_content, 'def')]
+        return self.__function_list
 
 
 def get_object_name_by_keyword(file_content, keyword):
-    return [line.strip().split(' ')[1].replace(':', '')
-            for line in file_content if re.match('^' + keyword + ' .*:', line)]
+    return [(line.strip().split(' ')[1]).split('(')[0].replace(':', '')
+            for line in file_content if re.match('^ *' + keyword + '.*: *$', line)]

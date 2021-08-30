@@ -10,6 +10,12 @@ class Function:
         self.__raises = []
         self.__docstring = '"""\n   <TO BE COMPLETED>\n\n\n'
 
+    def __eq__(self, other_function):
+        return self.__function_name == other_function.get_function_name()
+
+    def get_function_name(self):
+        return self.__function_name
+
     def set_param_list(self, param_list):
         self.__param_list = param_list
 
