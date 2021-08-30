@@ -3,6 +3,7 @@ from Project import Project
 from Section import Section
 from PythonFiles import PythonFiles, get_object_name_by_keyword
 from Class import Class
+from Function import Function
 
 
 class MyTestCase(unittest.TestCase):
@@ -62,6 +63,22 @@ class MyTestCase(unittest.TestCase):
 
         [self.assertIn(param, c1.get_docstring()) for param in param_list_example]
         [self.assertIn(methode, c1.get_docstring()) for methode in method_list_example]
+
+    def test_function(self):
+        param_list_example = ['param1', 'param2', 'param3']
+        return_list_example = ['return1', 'return2']
+        raise_list_example = ['AttributeError', 'ValueError']
+
+        f1 = Function('function_test')
+        f1.set_param_list(param_list_example)
+        f1.set_returns(return_list_example)
+        f1.set_raises(raise_list_example)
+
+        f1.write_docstring()
+
+        [self.assertIn(param, f1.get_docstring()) for param in param_list_example]
+        [self.assertIn(cur_return, f1.get_docstring()) for cur_return in return_list_example]
+        [self.assertIn(cur_raise, f1.get_docstring()) for cur_raise in raise_list_example]
 
 
 if __name__ == '__main__':
