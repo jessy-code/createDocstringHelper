@@ -9,6 +9,7 @@ class Class:
         self.__methode_list = []
         self.__parm_list = []
         self.__docstring = '"""\n   <TO BE COMPLETED>\n\n\n'
+        self.content = []
 
     def __eq__(self, other_class):
         return self.__class_name == other_class.get_class_name()

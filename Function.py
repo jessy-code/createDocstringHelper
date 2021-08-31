@@ -9,6 +9,7 @@ class Function:
         self.__returns = []
         self.__raises = []
         self.__docstring = '"""\n   <TO BE COMPLETED>\n\n\n'
+        self.content = []
 
     def __eq__(self, other_function):
         return self.__function_name == other_function.get_function_name()

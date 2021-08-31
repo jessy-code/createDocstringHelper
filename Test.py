@@ -1,7 +1,7 @@
 import unittest
 from Project import Project
 from Section import Section
-from PythonFiles import PythonFiles, get_object_name_by_keyword
+from PythonFiles import PythonFiles, get_object_name_by_keyword, test_regex, extract_name_in_line
 from Class import Class
 from Function import Function
 
@@ -44,11 +44,12 @@ class MyTestCase(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             p2 = PythonFiles('doesnotexist')
 
-        p1.get_class_in_file()
-        self.assertListEqual(p1.get_class_in_file(), [Class('Class1')])
+        p1.get_class_content_in_file()
+        self.assertDictEqual(p1.get_class_content_in_file(), {'Class1': Class('Class1')})
 
         p2 = PythonFiles('projectExample/Class2.py')
-        self.assertListEqual(p2.get_class_in_file(), [Class('Class2'), Class('Class3')])
+        self.assertDictEqual(p2.get_class_content_in_file(), {'Class2': Class('Class2'), 'Class3': Class('Class3')})
+
         p2.get_function_in_file()
         self.assertListEqual(p2.get_function_in_file(), [Function('__init__'), Function('method1'), Function('method2'),
                                                          Function('method3'), Function('__init__'), Function('method1'),
@@ -84,6 +85,18 @@ class MyTestCase(unittest.TestCase):
         [self.assertIn(param, f1.get_docstring()) for param in param_list_example]
         [self.assertIn(cur_return, f1.get_docstring()) for cur_return in return_list_example]
         [self.assertIn(cur_raise, f1.get_docstring()) for cur_raise in raise_list_example]
+
+    def test_test_regex(self):
+        self.assertIsNotNone(test_regex('   class Class1:   ', 'class'))
+        self.assertIsNotNone(test_regex("   def method3(self, param2, param3='foo'):    ", 'def'))
+
+        self.assertIsNone(test_regex('   class Class1:   lsdjfq', 'class'))
+        self.assertIsNone(test_regex("   def method3(self, param2, param3='foo'):    qsdfjsf", 'def'))
+
+    def test_extract_name_in_line(self):
+        self.assertEqual(extract_name_in_line('   class Class1:   lsdjfq'), 'Class1')
+        self.assertEqual(extract_name_in_line("   def method3(self, param2, param3='foo'):    qsdfjsf"), 'method3')
+        pass
 
 
 if __name__ == '__main__':
