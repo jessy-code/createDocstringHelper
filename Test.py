@@ -51,10 +51,8 @@ class MyTestCase(unittest.TestCase):
         self.assertDictEqual(p2.get_class_content_in_file(), {'Class2': Class('Class2'), 'Class3': Class('Class3')})
 
         p2.get_function_in_file()
-        self.assertListEqual(p2.get_function_in_file(), [Function('__init__'), Function('method1'), Function('method2'),
-                                                         Function('method3'), Function('__init__'), Function('method1'),
-                                                         Function('method2'), Function('method3'),
-                                                         Function('output_function')])
+        self.assertDictEqual(p2.get_function_in_file(), {'output_function': Function('output_function'),
+                                                         'other_function': Function('other_function')})
 
     def test_class(self):
         param_list_example = ['param1', 'param2', 'param3']

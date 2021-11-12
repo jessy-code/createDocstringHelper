@@ -9,7 +9,7 @@ class PythonFiles:
         self.__python_path = python_file_path
         self.__python_file_content = []
         self.__class_dict = {}
-        self.__function_list = []
+        self.__function_dict = {}
 
         self.__call__()
 
@@ -25,9 +25,9 @@ class PythonFiles:
         return self.__python_file_content
 
     def get_function_in_file(self):
-        self.__function_list = [Function(function_name) for function_name in get_object_name_by_keyword(
-            self.__python_file_content, 'def')]
-        return self.__function_list
+        self.__function_dict = {function_name: Function(function_name) for function_name in
+                                get_first_level_object_name_by_keyword(self.__python_file_content, 'def')}
+        return self.__function_dict
 
     def get_class_content_in_file(self):
         self.__class_dict = {extract_name_in_line(line): Class(extract_name_in_line(line)) for line in
@@ -46,3 +46,8 @@ def extract_name_in_line(line):
 def get_object_name_by_keyword(file_content, keyword):
     return [(line.strip().split(' ')[1]).split('(')[0].replace(':', '')
             for line in file_content if re.match('^ *' + keyword + '.*: *$', line)]
+
+
+def get_first_level_object_name_by_keyword(file_content, keyword):
+    return [(line.strip().split(' ')[1]).split('(')[0].replace(':', '')
+            for line in file_content if re.match('^' + keyword + '.*: *$', line)]
