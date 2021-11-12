@@ -18,3 +18,5 @@ class Class1:
                 cur_file.readline()
         except FileNotFoundError:
             raise
+
+print('hello')
