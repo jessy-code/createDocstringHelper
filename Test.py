@@ -6,11 +6,25 @@ from Class import Class
 from Function import Function
 
 
+def read_file_content(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            return file.readlines()
+
+    except FileNotFoundError:
+        print(file_path + ' not found')
+        raise
+
+
 class MyTestCase(unittest.TestCase):
 
     def test_project(self):
         p1 = Project('projectExample')
-        self.assertListEqual(['projectExample/Class1.py', 'projectExample/Class2.py'], p1.get_py_file_list())
+        self.assertListEqual(['projectExample/another_one.py',
+                              'projectExample/Class1.py',
+                              'projectExample/Class2.py',
+                              'projectExample/other_function.py',
+                              'projectExample/output_function.py'], p1.get_py_file_list())
 
         with self.assertRaises(FileNotFoundError):
             p2 = Project('doesnotexist')
@@ -54,6 +68,23 @@ class MyTestCase(unittest.TestCase):
         self.assertDictEqual(p2.get_function_in_file(), {'output_function': Function('output_function'),
                                                          'other_function': Function('other_function'),
                                                          'another_one': Function('another_one')})
+
+    def test_get_function_content_python_file(self):
+        p2 = PythonFiles('projectExample/Class2.py')
+        p2.get_function_in_file()
+
+        p2.get_function_content('output_function')
+        p2.get_function_content('other_function')
+        p2.get_function_content('another_one')
+
+        self.assertListEqual(p2.get_function_dict()['output_function'].content,
+                             read_file_content('projectExample/output_function.py'))
+
+        self.assertListEqual(p2.get_function_dict()['other_function'].content,
+                             read_file_content('projectExample/other_function.py'))
+
+        self.assertListEqual(p2.get_function_dict()['another_one'].content,
+                             read_file_content('projectExample/another_one.py'))
 
     def test_class(self):
         param_list_example = ['param1', 'param2', 'param3']

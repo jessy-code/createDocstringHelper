@@ -18,6 +18,11 @@ class Class2:
         return (param2, param3)
 
 
+def other_function(param1, param2):
+    print('toto')
+    return param1, param2
+
+
 class Class3:
 
     def __init__(self, attr1):
@@ -39,11 +44,6 @@ def output_function(file_path):
             cur_file.readline()
     except FileNotFoundError:
         raise
-
-
-def other_function(param1, param2):
-    print('toto')
-    return param1, param2
 
 
 def another_one():
