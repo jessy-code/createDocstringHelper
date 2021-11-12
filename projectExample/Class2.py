@@ -33,9 +33,18 @@ class Class3:
         return param2, param3
 
 
-def output_function():
-    pass
+def output_function(file_path):
+    try:
+        with open(file_path, 'r') as cur_file:
+            cur_file.readline()
+    except FileNotFoundError:
+        raise
 
 
 def other_function(param1, param2):
+    print('toto')
     return param1, param2
+
+
+def another_one():
+    return
