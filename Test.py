@@ -86,6 +86,20 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p2.get_function_dict()['another_one'].content,
                              read_file_content('projectExample/another_one.py'))
 
+    def test_function_param_list_from_content(self):
+        p2 = PythonFiles('projectExample/Class2.py')
+        func_dict = p2.get_function_in_file()
+
+        p2.get_function_content('output_function')
+        p2.get_function_content('other_function')
+        p2.get_function_content('another_one')
+
+        [func.get_param_list_from_content() for func in func_dict.values()]
+
+        self.assertListEqual(p2.get_function_dict()['output_function'].get_param_list(), ['file_path'])
+        self.assertListEqual(p2.get_function_dict()['other_function'].get_param_list(), ['param1', "param2='foo'"])
+        self.assertListEqual(p2.get_function_dict()['another_one'].get_param_list(), [''])
+
     def test_class(self):
         param_list_example = ['param1', 'param2', 'param3']
         method_list_example = ['foo1', 'foo2']
