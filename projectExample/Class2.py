@@ -44,9 +44,19 @@ def output_function(file_path):
             cur_file.readline()
     except FileNotFoundError:
         raise
+    return file_path
 
 
 def another_one():
     return
+
+
+def new_test_function(param1, param2):
+    return param1, param2
+
+
+def empty_function(param):
+    pass
+
 
 print('hello')

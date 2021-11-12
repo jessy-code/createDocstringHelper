@@ -4,5 +4,6 @@ def output_function(file_path):
             cur_file.readline()
     except FileNotFoundError:
         raise
+    return file_path
 
 

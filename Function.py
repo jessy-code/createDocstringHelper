@@ -1,3 +1,5 @@
+from re import match
+
 from Section import Section
 
 
@@ -26,6 +28,9 @@ class Function:
     def set_returns(self, returns):
         self.__returns = returns
 
+    def get_returns(self):
+        return self.__returns
+
     def set_raises(self, raises):
         self.__raises = raises
 
@@ -39,6 +44,21 @@ class Function:
         param_list = self.content[0].split('(')[1].split(')')[0].split(',')
         self.__param_list = [elt.strip() for elt in param_list]
         return self.__param_list
+
+    def get_return_list_from_content(self):
+        try:
+            return_line = [line for line in self.content if match('^.*return .*$', line)][0].split('return ')[1]
+            if match('\(.*\)', return_line):
+                returns_with_spaces = return_line[1:-2].split(',')
+
+            else:
+                returns_with_spaces = return_line.split('\n')[0].split(',')
+
+            self.__returns = [elt.strip() for elt in returns_with_spaces]
+
+        except:
+            pass
+        return self.__returns
 
     def write_docstring(self):
         self.__docstring += Section('Parameters', self.__param_list).get_writable_section() + \
