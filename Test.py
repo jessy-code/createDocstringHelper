@@ -66,6 +66,9 @@ class MyTestCase(unittest.TestCase):
 
         p2.get_function_in_file()
         self.assertDictEqual(p2.get_function_in_file(), {'output_function': Function('output_function'),
+                                                         'output_function2': Function('output_function2'),
+                                                         'output_function3': Function('output_function3'),
+                                                         'output_function4': Function('output_function4'),
                                                          'other_function': Function('other_function'),
                                                          'another_one': Function('another_one'),
                                                          'new_test_function': Function('new_test_function'),
@@ -94,6 +97,9 @@ class MyTestCase(unittest.TestCase):
         func_dict = p2.get_function_in_file()
 
         p2.get_function_content('output_function')
+        p2.get_function_content('output_function2')
+        p2.get_function_content('output_function3')
+        p2.get_function_content('output_function4')
         p2.get_function_content('other_function')
         p2.get_function_content('another_one')
         p2.get_function_content('new_test_function')
@@ -102,6 +108,9 @@ class MyTestCase(unittest.TestCase):
         [func.get_param_list_from_content() for func in func_dict.values()]
 
         self.assertListEqual(p2.get_function_dict()['output_function'].get_param_list(), ['file_path'])
+        self.assertListEqual(p2.get_function_dict()['output_function2'].get_param_list(), ['file_path'])
+        self.assertListEqual(p2.get_function_dict()['output_function3'].get_param_list(), ['file_path'])
+        self.assertListEqual(p2.get_function_dict()['output_function4'].get_param_list(), ['file_path'])
         self.assertListEqual(p2.get_function_dict()['other_function'].get_param_list(), ['param1', "param2='foo'"])
         self.assertListEqual(p2.get_function_dict()['another_one'].get_param_list(), [''])
         self.assertListEqual(p2.get_function_dict()['new_test_function'].get_param_list(), ['param1', 'param2'])
@@ -122,9 +131,15 @@ class MyTestCase(unittest.TestCase):
 
         self.assertListEqual(p2.get_function_dict()['output_function'].get_returns(), ['file_path'])
         self.assertListEqual(p2.get_function_dict()['other_function'].get_returns(), ['param1', 'param2'])
-        self.assertListEqual(p2.get_function_dict()['another_one'].get_returns(), [])
+        self.assertListEqual(p2.get_function_dict()['another_one'].get_returns(), [''])
         self.assertListEqual(p2.get_function_dict()['new_test_function'].get_returns(), ['param1', 'param2'])
         self.assertListEqual(p2.get_function_dict()['empty_function'].get_returns(), [])
+
+    def test_get_raises_from_content(self):
+        p2 = PythonFiles('projectExample/Class2.py')
+        func_dict = p2.get_function_in_file()
+
+
 
     def test_class(self):
         param_list_example = ['param1', 'param2', 'param3']

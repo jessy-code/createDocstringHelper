@@ -20,7 +20,7 @@ class Class2:
 
 def other_function(param1, param2='foo'):
     print('toto')
-    return (param1, param2)
+    return(param1, param2)
 
 
 class Class3:
@@ -43,6 +43,37 @@ def output_function(file_path):
         with open(file_path, 'r') as cur_file:
             cur_file.readline()
     except FileNotFoundError:
+        raise
+    return file_path
+
+
+def output_function2(file_path):
+    try:
+        with open(file_path, 'r') as cur_file:
+            cur_file.readline()
+    except FileNotFoundError as e:
+        raise
+    return file_path
+
+
+def output_function3(file_path):
+    try:
+        with open(file_path, 'r') as cur_file:
+            cur_file.readline()
+    except:
+        raise
+    return file_path
+
+
+def output_function4(file_path):
+    try:
+        with open(file_path, 'r') as cur_file:
+            cur_file.readline()
+    except(FileNotFoundError, FileExistsError):
+        raise
+    try:
+        toto = [1,2,3]
+    except IndexError:
         raise
     return file_path
 

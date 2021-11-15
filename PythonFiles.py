@@ -37,7 +37,7 @@ class PythonFiles:
         for line in self.__python_file_content:
             if re.match('^[a-zA-Z0-9]' + '.*$', line):
                 flag = False
-            if re.match('^' + 'def ' + function_name + '.*: *$', line):
+            if re.match('^' + 'def ' + function_name + '\(.*: *$', line):
                 flag = True
             if flag:
                 self.__function_dict[function_name].content.append(line)

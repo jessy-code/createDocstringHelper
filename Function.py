@@ -41,13 +41,17 @@ class Function:
         return self.__docstring
 
     def get_param_list_from_content(self):
-        param_list = self.content[0].split('(')[1].split(')')[0].split(',')
-        self.__param_list = [elt.strip() for elt in param_list]
-        return self.__param_list
+        try:
+            param_list = self.content[0].split('(')[1].split(')')[0].split(',')
+            self.__param_list = [elt.strip() for elt in param_list]
+            return self.__param_list
+
+        except IndexError:
+            pass
 
     def get_return_list_from_content(self):
         try:
-            return_line = [line for line in self.content if match('^.*return .*$', line)][0].split('return ')[1]
+            return_line = [line for line in self.content if match('^.*return.*$', line)][0].split('return')[1]
             if match('\(.*\)', return_line):
                 returns_with_spaces = return_line[1:-2].split(',')
 
@@ -59,6 +63,16 @@ class Function:
         except:
             pass
         return self.__returns
+
+    def get_raises_from_content(self):
+        try:
+            except_lines = [line for line in self.content if match('^.*except.*$', line)]
+            exception_rised = [elt.split('as')[0].split['except'][1].strip() for elt in except_lines]
+            pass
+            ###### To finish ######
+        except:
+            pass
+        return self.__raises
 
     def write_docstring(self):
         self.__docstring += Section('Parameters', self.__param_list).get_writable_section() + \
