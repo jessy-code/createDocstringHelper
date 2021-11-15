@@ -1,17 +1,18 @@
 class Section:
 
-    def __init__(self, section_title, object_list=[]):
+    def __init__(self, section_title, object_list=[], offset=''):
         self.__section_title = section_title
         self.__object_list = object_list
         self.__writable_section = ''
+        self.offset = offset
 
         self.__call__(section_title, object_list)
 
     def __call__(self, section_title, object_list):
-        self.__section_title = '\n' + section_title + '\n' + ''.join(['_' for car in section_title])
+        self.__section_title = '\n' + self.offset + section_title + '\n' + self.offset + ''.join(['_' for car in section_title])
         self.__writable_section += self.__section_title
         if len(object_list) > 0:
-            self.__writable_section += ''.join(['\n' + cur_object + ' : <TO BE COMPLETED>\n'
+            self.__writable_section += ''.join(['\n' + self.offset + cur_object + ' : <TO BE COMPLETED>\n'
                                                for cur_object in object_list])
 
     def get_section_title(self):

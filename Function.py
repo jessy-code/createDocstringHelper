@@ -1,5 +1,5 @@
-import re
-from re import match, compile
+from re import match, compile, IGNORECASE
+from re import split as resplit
 
 from Section import Section
 
@@ -11,7 +11,7 @@ class Function:
         self.__param_list = []
         self.__returns = []
         self.__raises = []
-        self.__docstring = '"""\n   <TO BE COMPLETED>\n\n\n'
+        self.__docstring = ''
         self.content = []
 
     def __eq__(self, other_function):
@@ -45,7 +45,10 @@ class Function:
         self.__param_list = []
         try:
             param_list = self.content[0].split('(')[1].split(')')[0].split(',')
-            self.__param_list = [elt.strip() for elt in param_list]
+            if param_list != '':
+                self.__param_list = [elt.strip() for elt in param_list]
+            else:
+                self.__param_list = False
             return self.__param_list
 
         except IndexError:
@@ -70,8 +73,8 @@ class Function:
     def get_raises_from_content(self):
         self.__raises = []
 
-        exception_format = re.compile('^[ ]*except[( ].*$')
-        several_exception_format = re.compile('^[ ]*except[( ].*,.*$')
+        exception_format = compile('^[ ]*except[( ].*$')
+        several_exception_format = compile('^[ ]*except[( ].*,.*$')
         except_lines = [line.strip() for line in self.content if match(exception_format, line)]
 
         [self.__raises.extend(elt.split('as')[0].split('except')[1].strip().split(':')[0].split(')')[0].split('(')[1].split(','))
@@ -82,7 +85,19 @@ class Function:
         self.__raises = [elt.strip() for elt in self.__raises]
         return self.__raises
 
+    def get_indentation(self):
+        return resplit(r'[a-z0-9]', self.content[1], flags=IGNORECASE)[0]
+
     def write_docstring(self):
-        self.__docstring += Section('Parameters', self.__param_list).get_writable_section() + \
-                            Section('Returns', self.__returns).get_writable_section() + \
-                            Section('Raises', self.__raises).get_writable_section() + '"""'
+        self.__docstring += self.get_indentation() + '"""\n' + self.get_indentation() + '<TO BE COMPLETED>\n'
+
+        if self.__param_list:
+            self.__docstring += Section('Parameters', self.__param_list, offset=self.get_indentation()).get_writable_section()
+
+        if len(self.__returns) > 0:
+            self.__docstring += Section('Returns', self.__returns, offset=self.get_indentation()).get_writable_section()
+
+        if len(self.__raises) > 0:
+            self.__docstring += Section('Raises', self.__raises, offset=self.get_indentation()).get_writable_section()
+
+        self.__docstring += '\n' + self.get_indentation() + '"""\n'

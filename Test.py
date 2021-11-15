@@ -23,6 +23,7 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(['projectExample/another_one.py',
                               'projectExample/Class1.py',
                               'projectExample/Class2.py',
+                              'projectExample/Class2_tmp.py',
                               'projectExample/other_function.py',
                               'projectExample/output_function.py'], p1.get_py_file_list())
 
@@ -79,9 +80,9 @@ class MyTestCase(unittest.TestCase):
         p2 = PythonFiles('projectExample/Class2.py')
         p2.get_function_in_file()
 
-        p2.get_function_content('output_function')
-        p2.get_function_content('other_function')
-        p2.get_function_content('another_one')
+        p2.get_first_level_function_content('output_function')
+        p2.get_first_level_function_content('other_function')
+        p2.get_first_level_function_content('another_one')
 
         self.assertListEqual(p2.get_function_dict()['output_function'].content,
                              read_file_content('projectExample/output_function.py'))
@@ -96,14 +97,14 @@ class MyTestCase(unittest.TestCase):
         p2 = PythonFiles('projectExample/Class2.py')
         func_dict = p2.get_function_in_file()
 
-        p2.get_function_content('output_function')
-        p2.get_function_content('output_function2')
-        p2.get_function_content('output_function3')
-        p2.get_function_content('output_function4')
-        p2.get_function_content('other_function')
-        p2.get_function_content('another_one')
-        p2.get_function_content('new_test_function')
-        p2.get_function_content('empty_function')
+        p2.get_first_level_function_content('output_function')
+        p2.get_first_level_function_content('output_function2')
+        p2.get_first_level_function_content('output_function3')
+        p2.get_first_level_function_content('output_function4')
+        p2.get_first_level_function_content('other_function')
+        p2.get_first_level_function_content('another_one')
+        p2.get_first_level_function_content('new_test_function')
+        p2.get_first_level_function_content('empty_function')
 
         [func.get_param_list_from_content() for func in func_dict.values()]
 
@@ -120,11 +121,11 @@ class MyTestCase(unittest.TestCase):
         p2 = PythonFiles('projectExample/Class2.py')
         func_dict = p2.get_function_in_file()
 
-        p2.get_function_content('output_function')
-        p2.get_function_content('other_function')
-        p2.get_function_content('another_one')
-        p2.get_function_content('new_test_function')
-        p2.get_function_content('empty_function')
+        p2.get_first_level_function_content('output_function')
+        p2.get_first_level_function_content('other_function')
+        p2.get_first_level_function_content('another_one')
+        p2.get_first_level_function_content('new_test_function')
+        p2.get_first_level_function_content('empty_function')
 
         [func.get_param_list_from_content() for func in func_dict.values()]
         [func.get_return_list_from_content() for func in func_dict.values()]
@@ -145,7 +146,7 @@ class MyTestCase(unittest.TestCase):
                               'output_function4',
                               'new_test_function']
 
-        [p2.get_function_content(func) for func in test_function_list]
+        [p2.get_first_level_function_content(func) for func in test_function_list]
         [p2.get_function_dict()[func].get_raises_from_content() for func in test_function_list]
 
         self.assertListEqual(p2.get_function_dict()['output_function'].get_raises(), ['FileNotFoundError'])
@@ -155,6 +156,11 @@ class MyTestCase(unittest.TestCase):
                                                                                        'FileExistsError',
                                                                                        'IndexError'])
         self.assertListEqual(p2.get_function_dict()['new_test_function'].get_raises(), [])
+
+    def test_write_first_level_function_docstring(self):
+        p2 = PythonFiles('projectExample/Class2.py')
+        func_dict = p2.get_function_in_file()
+        p2.write_first_level_function_docstring()
         pass
 
     def test_class(self):
