@@ -72,7 +72,7 @@ def output_function4(file_path):
     except(FileNotFoundError, FileExistsError):
         raise
     try:
-        toto = [1,2,3]
+        toto = [1, 2, 3]
     except IndexError:
         raise
     return file_path

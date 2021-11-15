@@ -139,7 +139,23 @@ class MyTestCase(unittest.TestCase):
         p2 = PythonFiles('projectExample/Class2.py')
         func_dict = p2.get_function_in_file()
 
+        test_function_list = ['output_function',
+                              'output_function2',
+                              'output_function3',
+                              'output_function4',
+                              'new_test_function']
 
+        [p2.get_function_content(func) for func in test_function_list]
+        [p2.get_function_dict()[func].get_raises_from_content() for func in test_function_list]
+
+        self.assertListEqual(p2.get_function_dict()['output_function'].get_raises(), ['FileNotFoundError'])
+        self.assertListEqual(p2.get_function_dict()['output_function2'].get_raises(), ['FileNotFoundError'])
+        self.assertListEqual(p2.get_function_dict()['output_function3'].get_raises(), [])
+        self.assertListEqual(p2.get_function_dict()['output_function4'].get_raises(), ['FileNotFoundError',
+                                                                                       'FileExistsError',
+                                                                                       'IndexError'])
+        self.assertListEqual(p2.get_function_dict()['new_test_function'].get_raises(), [])
+        pass
 
     def test_class(self):
         param_list_example = ['param1', 'param2', 'param3']

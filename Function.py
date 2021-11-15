@@ -1,4 +1,5 @@
-from re import match
+import re
+from re import match, compile
 
 from Section import Section
 
@@ -41,6 +42,7 @@ class Function:
         return self.__docstring
 
     def get_param_list_from_content(self):
+        self.__param_list = []
         try:
             param_list = self.content[0].split('(')[1].split(')')[0].split(',')
             self.__param_list = [elt.strip() for elt in param_list]
@@ -50,6 +52,7 @@ class Function:
             pass
 
     def get_return_list_from_content(self):
+        self.__returns = []
         try:
             return_line = [line for line in self.content if match('^.*return.*$', line)][0].split('return')[1]
             if match('\(.*\)', return_line):
@@ -65,13 +68,18 @@ class Function:
         return self.__returns
 
     def get_raises_from_content(self):
-        try:
-            except_lines = [line for line in self.content if match('^.*except.*$', line)]
-            exception_rised = [elt.split('as')[0].split['except'][1].strip() for elt in except_lines]
-            pass
-            ###### To finish ######
-        except:
-            pass
+        self.__raises = []
+
+        exception_format = re.compile('^[ ]*except[( ].*$')
+        several_exception_format = re.compile('^[ ]*except[( ].*,.*$')
+        except_lines = [line.strip() for line in self.content if match(exception_format, line)]
+
+        [self.__raises.extend(elt.split('as')[0].split('except')[1].strip().split(':')[0].split(')')[0].split('(')[1].split(','))
+         if match(several_exception_format, elt)
+         else self.__raises.append(elt.split('as')[0].split('except')[1].strip().split(':')[0].split(')')[0])
+         for elt in except_lines]
+
+        self.__raises = [elt.strip() for elt in self.__raises]
         return self.__raises
 
     def write_docstring(self):
