@@ -4,6 +4,8 @@ from Section import Section
 from PythonFiles import PythonFiles, get_object_name_by_keyword, test_regex, extract_name_in_line
 from Class import Class
 from Function import Function
+from shutil import copytree, rmtree
+from os.path import isdir
 
 
 def read_file_content(file_path):
@@ -19,13 +21,12 @@ def read_file_content(file_path):
 class MyTestCase(unittest.TestCase):
 
     def test_project(self):
-        p1 = Project('projectExample')
-        self.assertListEqual(['projectExample/another_one.py',
-                              'projectExample/Class1.py',
-                              'projectExample/Class2.py',
-                              'projectExample/Class2_tmp.py',
-                              'projectExample/other_function.py',
-                              'projectExample/output_function.py'], p1.get_py_file_list())
+        p1 = Project('tests/Initial_project_example')
+        self.assertListEqual(['tests/Initial_project_example/another_one.py',
+                              'tests/Initial_project_example/Class1.py',
+                              'tests/Initial_project_example/Class2.py',
+                              'tests/Initial_project_example/other_function.py',
+                              'tests/Initial_project_example/output_function.py'], p1.get_py_file_list())
 
         with self.assertRaises(FileNotFoundError):
             p2 = Project('doesnotexist')
@@ -50,8 +51,8 @@ class MyTestCase(unittest.TestCase):
                                                     '<TO BE COMPLETED>\n')
 
     def test_python_files(self):
-        p1 = PythonFiles('projectExample/Class1.py')
-        with open('projectExample/Class1.py', 'r') as file:
+        p1 = PythonFiles('tests/Initial_project_example/Class1.py')
+        with open('tests/Initial_project_example/Class1.py', 'r') as file:
             file_content = file.readlines()
         self.assertListEqual(p1.get_python_file_content(), file_content)
         self.assertListEqual(get_object_name_by_keyword(p1.get_python_file_content(), 'class'), ['Class1'])
@@ -62,7 +63,7 @@ class MyTestCase(unittest.TestCase):
         p1.get_class_content_in_file()
         self.assertDictEqual(p1.get_class_content_in_file(), {'Class1': Class('Class1')})
 
-        p2 = PythonFiles('projectExample/Class2.py')
+        p2 = PythonFiles('tests/Initial_project_example/Class2.py')
         self.assertDictEqual(p2.get_class_content_in_file(), {'Class2': Class('Class2'), 'Class3': Class('Class3')})
 
         p2.get_function_in_file()
@@ -77,7 +78,7 @@ class MyTestCase(unittest.TestCase):
                                                          })
 
     def test_get_function_content_python_file(self):
-        p2 = PythonFiles('projectExample/Class2.py')
+        p2 = PythonFiles('tests/Initial_project_example/Class2.py')
         p2.get_function_in_file()
 
         p2.get_first_level_function_content('output_function')
@@ -85,40 +86,42 @@ class MyTestCase(unittest.TestCase):
         p2.get_first_level_function_content('another_one')
 
         self.assertListEqual(p2.get_function_dict()['output_function'].content,
-                             read_file_content('projectExample/output_function.py'))
+                             read_file_content('tests/Initial_project_example/output_function.py'))
 
         self.assertListEqual(p2.get_function_dict()['other_function'].content,
-                             read_file_content('projectExample/other_function.py'))
+                             read_file_content('tests/Initial_project_example/other_function.py'))
 
         self.assertListEqual(p2.get_function_dict()['another_one'].content,
-                             read_file_content('projectExample/another_one.py'))
+                             read_file_content('tests/Initial_project_example/another_one.py'))
 
     def test_function_param_list_from_content(self):
-        p2 = PythonFiles('projectExample/Class2.py')
+        p2 = PythonFiles('tests/Initial_project_example/Class2.py')
+        test_func_list = ['other_function',
+                          'output_function',
+                          'output_function2',
+                          'output_function3',
+                          'output_function4',
+                          'another_one',
+                          'new_test_function',
+                          'empty_function']
+
         func_dict = p2.get_function_in_file()
 
-        p2.get_first_level_function_content('output_function')
-        p2.get_first_level_function_content('output_function2')
-        p2.get_first_level_function_content('output_function3')
-        p2.get_first_level_function_content('output_function4')
-        p2.get_first_level_function_content('other_function')
-        p2.get_first_level_function_content('another_one')
-        p2.get_first_level_function_content('new_test_function')
-        p2.get_first_level_function_content('empty_function')
-
-        [func.get_param_list_from_content() for func in func_dict.values()]
+        [p2.get_first_level_function_content(func) for func in test_func_list]
+        [func.get_param_list_from_content() for func in func_dict.values()
+         if func.get_function_name() in test_func_list]
 
         self.assertListEqual(p2.get_function_dict()['output_function'].get_param_list(), ['file_path'])
         self.assertListEqual(p2.get_function_dict()['output_function2'].get_param_list(), ['file_path'])
         self.assertListEqual(p2.get_function_dict()['output_function3'].get_param_list(), ['file_path'])
         self.assertListEqual(p2.get_function_dict()['output_function4'].get_param_list(), ['file_path'])
         self.assertListEqual(p2.get_function_dict()['other_function'].get_param_list(), ['param1', "param2='foo'"])
-        self.assertListEqual(p2.get_function_dict()['another_one'].get_param_list(), [''])
+        self.assertListEqual(p2.get_function_dict()['another_one'].get_param_list(), [])
         self.assertListEqual(p2.get_function_dict()['new_test_function'].get_param_list(), ['param1', 'param2'])
         self.assertListEqual(p2.get_function_dict()['empty_function'].get_param_list(), ['param'])
 
     def test_get_return_list_from_content(self):
-        p2 = PythonFiles('projectExample/Class2.py')
+        p2 = PythonFiles('tests/Initial_project_example/Class2.py')
         func_dict = p2.get_function_in_file()
 
         p2.get_first_level_function_content('output_function')
@@ -127,7 +130,6 @@ class MyTestCase(unittest.TestCase):
         p2.get_first_level_function_content('new_test_function')
         p2.get_first_level_function_content('empty_function')
 
-        [func.get_param_list_from_content() for func in func_dict.values()]
         [func.get_return_list_from_content() for func in func_dict.values()]
 
         self.assertListEqual(p2.get_function_dict()['output_function'].get_returns(), ['file_path'])
@@ -137,7 +139,7 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p2.get_function_dict()['empty_function'].get_returns(), [])
 
     def test_get_raises_from_content(self):
-        p2 = PythonFiles('projectExample/Class2.py')
+        p2 = PythonFiles('tests/Initial_project_example/Class2.py')
         func_dict = p2.get_function_in_file()
 
         test_function_list = ['output_function',
@@ -158,10 +160,24 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p2.get_function_dict()['new_test_function'].get_raises(), [])
 
     def test_write_first_level_function_docstring(self):
-        p2 = PythonFiles('projectExample/Class2.py')
-        func_dict = p2.get_function_in_file()
+        if isdir('tests/modified_project_example'):
+            rmtree('tests/modified_project_example')
+        copytree('tests/Initial_project_example', 'tests/modified_project_example')
+
+        p2 = PythonFiles('tests/modified_project_example/Class2.py')
+        p2.get_function_in_file()
         p2.write_first_level_function_docstring()
-        pass
+
+        documented_function_file = PythonFiles('tests/documented_project_example/Class2.py')
+        documented_function_file.get_function_in_file()
+
+        [documented_function_file.get_first_level_function_content(func)
+         for func in documented_function_file.get_function_dict().keys()]
+        [self.assertListEqual(p2.get_function_dict()[func].content,
+                              documented_function_file.get_function_dict()[func].content)
+         for func in p2.get_function_dict().keys()]
+
+        rmtree('tests/modified_project_example')
 
     def test_class(self):
         param_list_example = ['param1', 'param2', 'param3']

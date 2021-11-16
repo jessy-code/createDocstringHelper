@@ -1,6 +1,7 @@
 from re import match
 from Class import Class
 from Function import Function
+from shutil import move
 
 
 class PythonFiles:
@@ -27,15 +28,15 @@ class PythonFiles:
     def get_function_dict(self):
         return self.__function_dict
 
-    def get_function_in_file(self):
-        self.__function_dict = {function_name: Function(function_name) for function_name in
-                                get_first_level_object_name_by_keyword(self.__python_file_content, 'def')}
-        return self.__function_dict
-
     def get_class_content_in_file(self):
         self.__class_dict = {extract_name_in_line(line): Class(extract_name_in_line(line)) for line in
                              self.__python_file_content if test_regex(line, 'class')}
         return self.__class_dict
+
+    def get_function_in_file(self):
+        self.__function_dict = {function_name: Function(function_name) for function_name in
+                                get_first_level_object_name_by_keyword(self.__python_file_content, 'def')}
+        return self.__function_dict
 
     def get_first_level_function_content(self, function_name):
         self.__function_dict[function_name].content = []
@@ -48,6 +49,8 @@ class PythonFiles:
                 flag = True
             if flag:
                 self.__function_dict[function_name].content.append(line)
+
+        self.__function_dict[function_name].extract_already_docstring_existing()
 
         return self.__function_dict[function_name]
 
@@ -81,6 +84,9 @@ class PythonFiles:
 
                     if not flag:
                         file.write(line)
+
+            move(tmp_file, self.__python_path)
+
 
         except(FileNotFoundError, FileExistsError):
             print('Impossible to create file ' + tmp_file)

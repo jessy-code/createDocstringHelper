@@ -15,7 +15,7 @@ class Function:
         self.content = []
 
     def __eq__(self, other_function):
-        return self.__function_name == other_function.get_function_name()
+        return self.__function_name == other_function.get_function_name() and self.content == other_function.content
 
     def get_function_name(self):
         return self.__function_name
@@ -43,16 +43,18 @@ class Function:
 
     def get_param_list_from_content(self):
         self.__param_list = []
-        try:
-            param_list = self.content[0].split('(')[1].split(')')[0].split(',')
-            if param_list != '':
-                self.__param_list = [elt.strip() for elt in param_list]
-            else:
-                self.__param_list = False
-            return self.__param_list
+        several_param_format = compile('^.*def .*\(.*,.*$')
+        no_param_format = compile('^.*def .*\(\)')
 
-        except IndexError:
-            pass
+        if match(several_param_format, self.content[0]):
+            self.__param_list.extend(self.content[0].split('(')[1].split(')')[0].split(','))
+        elif match(no_param_format, self.content[0]):
+            self.__param_list = []
+        else:
+            self.__param_list.append(self.content[0].split('(')[1].split(')')[0])
+
+        self.__param_list = [elt.strip() for elt in self.__param_list]
+        pass
 
     def get_return_list_from_content(self):
         self.__returns = []
@@ -97,6 +99,19 @@ class Function:
         indented_lines = [line for line in self.content if
                           match(r'^ .*[a-zA-Z0-9]*$', line) and self.content.index(line) > 0]
         return resplit(r'[a-z0-9]', indented_lines[0], flags=IGNORECASE)[0]
+
+    def extract_already_docstring_existing(self):
+        content_tmp = []
+        self.__docstring = []
+        flag = False
+        for line in self.content:
+            if match('.*""".*$', line):
+                flag = not flag
+            if flag or match('.*""".*$', line):
+                self.__docstring.append(line)
+            if not flag and not match('.*""".*$', line):
+                content_tmp.append(line)
+        self.content = content_tmp
 
     def write_docstring(self):
         self.__docstring += self.get_indentation() + '"""\n' + self.get_indentation() + '<TO BE COMPLETED>\n'
