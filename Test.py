@@ -132,7 +132,7 @@ class MyTestCase(unittest.TestCase):
 
         self.assertListEqual(p2.get_function_dict()['output_function'].get_returns(), ['file_path'])
         self.assertListEqual(p2.get_function_dict()['other_function'].get_returns(), ['param1', 'param2'])
-        self.assertListEqual(p2.get_function_dict()['another_one'].get_returns(), [''])
+        self.assertListEqual(p2.get_function_dict()['another_one'].get_returns(), [])
         self.assertListEqual(p2.get_function_dict()['new_test_function'].get_returns(), ['param1', 'param2'])
         self.assertListEqual(p2.get_function_dict()['empty_function'].get_returns(), [])
 
@@ -186,6 +186,8 @@ class MyTestCase(unittest.TestCase):
         f1.set_param_list(param_list_example)
         f1.set_returns(return_list_example)
         f1.set_raises(raise_list_example)
+
+        f1.content = ['def test():\n', '    print("hello")']
 
         f1.write_docstring()
 

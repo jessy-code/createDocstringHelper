@@ -53,7 +53,7 @@ def output_function2(file_path):
             cur_file.readline()
     except FileNotFoundError as e:
         raise
-    return file_path
+    return(file_path)
 
 
 def output_function3(file_path):

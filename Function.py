@@ -56,28 +56,36 @@ class Function:
 
     def get_return_list_from_content(self):
         self.__returns = []
-        try:
-            return_line = [line for line in self.content if match('^.*return.*$', line)][0].split('return')[1]
-            if match('\(.*\)', return_line):
-                returns_with_spaces = return_line[1:-2].split(',')
+        return_format = compile('^ *return.*$')
+        simple_return = compile('^ *return [a-zA-Z0-9_-]*$')
+        bracket_return = compile('^ *return\([a-zA-Z0-9_-]*\).*$')
+        several_value_return = compile('^ *return [a-zA-Z0-9_-]*,.*$')
+        several_value_with_bracket_return = compile('^ *return\([a-zA-Z0-9_-]*,.*$')
+        return_lines = [line.strip() for line in self.content if match(return_format, line)]
 
-            else:
-                returns_with_spaces = return_line.split('\n')[0].split(',')
+        [self.__returns.append(elt.split('(')[1].split(')')[0]) for elt in return_lines if match(bracket_return, elt)]
 
-            self.__returns = [elt.strip() for elt in returns_with_spaces]
+        [self.__returns.extend(elt.split('return ')[1].split(','))
+         for elt in return_lines if match(several_value_return, elt)]
 
-        except:
-            pass
+        [self.__returns.extend(elt.split('(')[1].split(')')[0].split(','))
+         for elt in return_lines if match(several_value_with_bracket_return, elt)]
+
+        [self.__returns.append(elt.split('return ')[1]) for elt in return_lines if match(simple_return, elt)]
+
+        self.__returns = [elt.strip() for elt in self.__returns]
+
         return self.__returns
 
     def get_raises_from_content(self):
         self.__raises = []
 
-        exception_format = compile('^[ ]*except[( ].*$')
-        several_exception_format = compile('^[ ]*except[( ].*,.*$')
+        exception_format = compile('^ *except[( ].*$')
+        several_exception_format = compile('^ *except[( ].*,.*$')
         except_lines = [line.strip() for line in self.content if match(exception_format, line)]
 
-        [self.__raises.extend(elt.split('as')[0].split('except')[1].strip().split(':')[0].split(')')[0].split('(')[1].split(','))
+        [self.__raises.extend(
+            elt.split('as')[0].split('except')[1].strip().split(':')[0].split(')')[0].split('(')[1].split(','))
          if match(several_exception_format, elt)
          else self.__raises.append(elt.split('as')[0].split('except')[1].strip().split(':')[0].split(')')[0])
          for elt in except_lines]
@@ -86,18 +94,25 @@ class Function:
         return self.__raises
 
     def get_indentation(self):
-        return resplit(r'[a-z0-9]', self.content[1], flags=IGNORECASE)[0]
+        indented_lines = [line for line in self.content if
+                          match(r'^ .*[a-zA-Z0-9]*$', line) and self.content.index(line) > 0]
+        return resplit(r'[a-z0-9]', indented_lines[0], flags=IGNORECASE)[0]
 
     def write_docstring(self):
         self.__docstring += self.get_indentation() + '"""\n' + self.get_indentation() + '<TO BE COMPLETED>\n'
 
         if self.__param_list:
-            self.__docstring += Section('Parameters', self.__param_list, offset=self.get_indentation()).get_writable_section()
+            self.__docstring += Section('Parameters', self.__param_list,
+                                        offset=self.get_indentation()).get_writable_section()
 
-        if len(self.__returns) > 0:
+        if self.__returns:
             self.__docstring += Section('Returns', self.__returns, offset=self.get_indentation()).get_writable_section()
 
-        if len(self.__raises) > 0:
+        if self.__raises:
             self.__docstring += Section('Raises', self.__raises, offset=self.get_indentation()).get_writable_section()
 
         self.__docstring += '\n' + self.get_indentation() + '"""\n'
+
+
+def remove_brackets_to_string(string):
+    return string.split('(')[1].split(')')[0]
