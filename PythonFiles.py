@@ -1,4 +1,4 @@
-from re import match
+from re import match, compile
 from Class import Class
 from Function import Function
 from shutil import move
@@ -28,10 +28,25 @@ class PythonFiles:
     def get_function_dict(self):
         return self.__function_dict
 
-    def get_class_content_in_file(self):
+    def get_class_dict(self):
+        return self.__class_dict
+
+    def get_class_in_file(self):
         self.__class_dict = {extract_name_in_line(line): Class(extract_name_in_line(line)) for line in
                              self.__python_file_content if test_regex(line, 'class')}
         return self.__class_dict
+
+    def get_class_content(self, class_name):
+        self.__class_dict[class_name].content = []
+        first_class_line = compile('^class ' + class_name + '.*:$')
+        last_class_line = compile('^[a-zA-Z0-9]' + '.*$')
+
+        self.__class_dict[class_name].content = add_content_to_string_from_list(self.__python_file_content,
+                                                                                self.__class_dict[class_name].content,
+                                                                                first_class_line,
+                                                                                last_class_line)
+
+        return self.__class_dict[class_name]
 
     def get_function_in_file(self):
         self.__function_dict = {function_name: Function(function_name) for function_name in
@@ -40,15 +55,13 @@ class PythonFiles:
 
     def get_first_level_function_content(self, function_name):
         self.__function_dict[function_name].content = []
-        flag = False
+        start_flag = compile('^' + 'def ' + function_name + '\(.*: *$')
+        stop_flag = compile('^[a-zA-Z0-9]' + '.*$')
 
-        for line in self.__python_file_content:
-            if match('^[a-zA-Z0-9]' + '.*$', line):
-                flag = False
-            if match('^' + 'def ' + function_name + '\(.*: *$', line):
-                flag = True
-            if flag:
-                self.__function_dict[function_name].content.append(line)
+        self.__function_dict[function_name].content = add_content_to_string_from_list(self.__python_file_content,
+                                                                                      self.__function_dict[function_name].content,
+                                                                                      start_flag,
+                                                                                      stop_flag)
 
         self.__function_dict[function_name].extract_already_docstring_existing()
 
@@ -87,7 +100,6 @@ class PythonFiles:
 
             move(tmp_file, self.__python_path)
 
-
         except(FileNotFoundError, FileExistsError):
             print('Impossible to create file ' + tmp_file)
             raise
@@ -109,3 +121,15 @@ def get_object_name_by_keyword(file_content, keyword):
 def get_first_level_object_name_by_keyword(file_content, keyword):
     return [(line.strip().split(' ')[1]).split('(')[0].replace(':', '')
             for line in file_content if match('^' + keyword + '.*: *$', line)]
+
+
+def add_content_to_string_from_list(list_of_line, content, start_flag, stop_flag):
+    flag = False
+    for line in list_of_line:
+        if match(stop_flag, line):
+            flag = False
+        if match(start_flag, line):
+            flag = True
+        if flag:
+            content.append(line)
+    return content

@@ -22,11 +22,15 @@ class MyTestCase(unittest.TestCase):
 
     def test_project(self):
         p1 = Project('tests/Initial_project_example')
-        self.assertListEqual(['tests/Initial_project_example/another_one.py',
-                              'tests/Initial_project_example/Class1.py',
-                              'tests/Initial_project_example/Class2.py',
-                              'tests/Initial_project_example/other_function.py',
-                              'tests/Initial_project_example/output_function.py'], p1.get_py_file_list())
+        real_list_file = ['tests/Initial_project_example/OneClassFileExample.py',
+        'tests/Initial_project_example/SeveralClassFileExample.py',
+        'tests/Initial_project_example/OnlyAClassFileExample.py']
+        list_file_get_by_function = p1.get_py_file_list()
+
+        real_list_file.sort()
+        list_file_get_by_function.sort()
+
+        self.assertListEqual(real_list_file, list_file_get_by_function)
 
         with self.assertRaises(FileNotFoundError):
             p2 = Project('doesnotexist')
@@ -51,8 +55,8 @@ class MyTestCase(unittest.TestCase):
                                                     '<TO BE COMPLETED>\n')
 
     def test_python_files(self):
-        p1 = PythonFiles('tests/Initial_project_example/Class1.py')
-        with open('tests/Initial_project_example/Class1.py', 'r') as file:
+        p1 = PythonFiles('tests/Initial_project_example/OneClassFileExample.py')
+        with open('tests/Initial_project_example/OneClassFileExample.py', 'r') as file:
             file_content = file.readlines()
         self.assertListEqual(p1.get_python_file_content(), file_content)
         self.assertListEqual(get_object_name_by_keyword(p1.get_python_file_content(), 'class'), ['Class1'])
@@ -60,11 +64,11 @@ class MyTestCase(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             p2 = PythonFiles('doesnotexist')
 
-        p1.get_class_content_in_file()
-        self.assertDictEqual(p1.get_class_content_in_file(), {'Class1': Class('Class1')})
+        p1.get_class_in_file()
+        self.assertDictEqual(p1.get_class_in_file(), {'Class1': Class('Class1')})
 
-        p2 = PythonFiles('tests/Initial_project_example/Class2.py')
-        self.assertDictEqual(p2.get_class_content_in_file(), {'Class2': Class('Class2'), 'Class3': Class('Class3')})
+        p2 = PythonFiles('tests/Initial_project_example/SeveralClassFileExample.py')
+        self.assertDictEqual(p2.get_class_in_file(), {'Class2': Class('Class2'), 'Class3': Class('Class3')})
 
         p2.get_function_in_file()
         self.assertDictEqual(p2.get_function_in_file(), {'output_function': Function('output_function'),
@@ -78,7 +82,7 @@ class MyTestCase(unittest.TestCase):
                                                          })
 
     def test_get_function_content_python_file(self):
-        p2 = PythonFiles('tests/Initial_project_example/Class2.py')
+        p2 = PythonFiles('tests/Initial_project_example/SeveralClassFileExample.py')
         p2.get_function_in_file()
 
         p2.get_first_level_function_content('output_function')
@@ -86,16 +90,45 @@ class MyTestCase(unittest.TestCase):
         p2.get_first_level_function_content('another_one')
 
         self.assertListEqual(p2.get_function_dict()['output_function'].content,
-                             read_file_content('tests/Initial_project_example/output_function.py'))
+                             read_file_content('tests/object_contents/output_function.py'))
 
         self.assertListEqual(p2.get_function_dict()['other_function'].content,
-                             read_file_content('tests/Initial_project_example/other_function.py'))
+                             read_file_content('tests/object_contents/other_function.py'))
 
         self.assertListEqual(p2.get_function_dict()['another_one'].content,
-                             read_file_content('tests/Initial_project_example/another_one.py'))
+                             read_file_content('tests/object_contents/another_one.py'))
+
+    def test_get_class_content(self):
+        p1 = PythonFiles('tests/Initial_project_example/OneClassFileExample.py')
+        p2 = PythonFiles('tests/Initial_project_example/SeveralClassFileExample.py')
+        p4 = PythonFiles('tests/Initial_project_example/OnlyAClassFileExample.py')
+
+        test_class1_list = ['Class1']
+        test_class2_list = ['Class2', 'Class3']
+        test_class4_list = ['Class4']
+
+        p1.get_class_in_file()
+        p2.get_class_in_file()
+        p4.get_class_in_file()
+
+        python_file_list = [p1, p2, p4]
+
+        [p1.get_class_content(class_name) for class_name in test_class1_list]
+        [p2.get_class_content(class_name) for class_name in test_class2_list]
+        [p4.get_class_content(class_name) for class_name in test_class4_list]
+
+        for python_file in python_file_list:
+            for class_name in python_file.get_class_dict().keys():
+                content = []
+                try:
+                    with open('tests/object_contents/' + class_name + '.py', 'r') as file:
+                        content = file.readlines()
+                except (FileNotFoundError, FileExistsError):
+                    pass
+                self.assertListEqual(content, python_file.get_class_dict()[class_name].content)
 
     def test_function_param_list_from_content(self):
-        p2 = PythonFiles('tests/Initial_project_example/Class2.py')
+        p2 = PythonFiles('tests/Initial_project_example/SeveralClassFileExample.py')
         test_func_list = ['other_function',
                           'output_function',
                           'output_function2',
@@ -121,7 +154,7 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p2.get_function_dict()['empty_function'].get_param_list(), ['param'])
 
     def test_get_return_list_from_content(self):
-        p2 = PythonFiles('tests/Initial_project_example/Class2.py')
+        p2 = PythonFiles('tests/Initial_project_example/SeveralClassFileExample.py')
         func_dict = p2.get_function_in_file()
 
         p2.get_first_level_function_content('output_function')
@@ -139,7 +172,7 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p2.get_function_dict()['empty_function'].get_returns(), [])
 
     def test_get_raises_from_content(self):
-        p2 = PythonFiles('tests/Initial_project_example/Class2.py')
+        p2 = PythonFiles('tests/Initial_project_example/SeveralClassFileExample.py')
         func_dict = p2.get_function_in_file()
 
         test_function_list = ['output_function',
@@ -164,11 +197,11 @@ class MyTestCase(unittest.TestCase):
             rmtree('tests/modified_project_example')
         copytree('tests/Initial_project_example', 'tests/modified_project_example')
 
-        p2 = PythonFiles('tests/modified_project_example/Class2.py')
+        p2 = PythonFiles('tests/modified_project_example/SeveralClassFileExample.py')
         p2.get_function_in_file()
         p2.write_first_level_function_docstring()
 
-        documented_function_file = PythonFiles('tests/documented_project_example/Class2.py')
+        documented_function_file = PythonFiles('tests/documented_project_example/SeveralClassFileExample.py')
         documented_function_file.get_function_in_file()
 
         [documented_function_file.get_first_level_function_content(func)
