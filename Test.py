@@ -315,6 +315,21 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p1.get_class_dict()['Class2'].get_methode_dict()['__init__'].content, init_content)
         self.assertListEqual(p1.get_class_dict()['Class2'].get_methode_dict()['method2'].content, method2_content)
 
+    def test_get_param_list_from_class_content(self):
+        p1 = PythonFiles('tests/Initial_project_example/SeveralClassFileExample.py')
+        p1.get_class_in_file()
+
+        [p1.get_class_content(class_name) for class_name in p1.get_class_dict().keys()]
+        [p1.get_class_dict()[class_name].get_function_in_class() for class_name in p1.get_class_dict()]
+
+        for class_object in p1.get_class_dict().values():
+            for method in class_object.get_methode_dict().values():
+                class_object.get_function_content_from_class_content(method.get_function_name())
+                method.get_param_list_from_content()
+
+        self.assertListEqual(p1.get_class_dict()['Class2'].get_param_list_from_class_content(), ['attr1'])
+        self.assertListEqual(p1.get_class_dict()['Class3'].get_param_list_from_class_content(), ['attr1', 'attr2'])
+
 
 if __name__ == '__main__':
     unittest.main()

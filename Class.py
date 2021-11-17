@@ -51,6 +51,10 @@ class Class:
 
         return self.__methode_dict[function_name]
 
+    def get_param_list_from_class_content(self):
+        self.__parm_list = self.__methode_dict['__init__'].get_param_list()[1:]
+        return self.__parm_list
+
     def write_docstring(self):
         self.__docstring += Section('Parameters', self.__parm_list).get_writable_section() + \
                             Section('Methods', self.__methode_dict).get_writable_section() + '"""'

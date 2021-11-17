@@ -54,7 +54,6 @@ class Function:
             self.__param_list.append(self.content[0].split('(')[1].split(')')[0])
 
         self.__param_list = [elt.strip() for elt in self.__param_list]
-        pass
 
     def get_return_list_from_content(self):
         self.__returns = []
