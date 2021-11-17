@@ -1,11 +1,12 @@
 import unittest
 from Project import Project
 from Section import Section
-from PythonFiles import PythonFiles, get_object_name_by_keyword, test_regex, extract_name_in_line
+from PythonFiles import PythonFiles
 from Class import Class
 from Function import Function
 from shutil import copytree, rmtree
 from os.path import isdir
+from OverallFunctions import get_object_name_by_keyword, test_regex, extract_name_in_line
 
 
 def read_file_content(file_path):
@@ -23,8 +24,8 @@ class MyTestCase(unittest.TestCase):
     def test_project(self):
         p1 = Project('tests/Initial_project_example')
         real_list_file = ['tests/Initial_project_example/OneClassFileExample.py',
-        'tests/Initial_project_example/SeveralClassFileExample.py',
-        'tests/Initial_project_example/OnlyAClassFileExample.py']
+                          'tests/Initial_project_example/SeveralClassFileExample.py',
+                          'tests/Initial_project_example/OnlyAClassFileExample.py']
         list_file_get_by_function = p1.get_py_file_list()
 
         real_list_file.sort()
@@ -214,17 +215,13 @@ class MyTestCase(unittest.TestCase):
 
     def test_class(self):
         param_list_example = ['param1', 'param2', 'param3']
-        method_list_example = ['foo1', 'foo2']
 
         c1 = Class('ClassTest')
         c1.set_param_list(param_list_example)
-        c1.set_attribute_list(param_list_example)
-        c1.set_methode_list(method_list_example)
 
         c1.write_docstring()
 
         [self.assertIn(param, c1.get_docstring()) for param in param_list_example]
-        [self.assertIn(methode, c1.get_docstring()) for methode in method_list_example]
 
     def test_function(self):
         param_list_example = ['param1', 'param2', 'param3']
@@ -254,6 +251,47 @@ class MyTestCase(unittest.TestCase):
     def test_extract_name_in_line(self):
         self.assertEqual(extract_name_in_line('   class Class1:   lsdjfq'), 'Class1')
         self.assertEqual(extract_name_in_line("   def method3(self, param2, param3='foo'):    qsdfjsf"), 'method3')
+
+    def test_get_class_content(self):
+        p1 = PythonFiles('tests/Initial_project_example/OneClassFileExample.py')
+        p2 = PythonFiles('tests/Initial_project_example/SeveralClassFileExample.py')
+        p4 = PythonFiles('tests/Initial_project_example/OnlyAClassFileExample.py')
+
+        test_class1_list = ['Class1']
+        test_class2_list = ['Class2', 'Class3']
+        test_class4_list = ['Class4']
+
+        p1.get_class_in_file()
+        p2.get_class_in_file()
+        p4.get_class_in_file()
+
+        python_file_list = [p1, p2, p4]
+
+        [p1.get_class_content(class_name) for class_name in test_class1_list]
+        [p2.get_class_content(class_name) for class_name in test_class2_list]
+        [p4.get_class_content(class_name) for class_name in test_class4_list]
+
+        for python_file in python_file_list:
+            for class_name in python_file.get_class_dict().keys():
+                content = []
+                try:
+                    with open('tests/object_contents/' + class_name + '.py', 'r') as file:
+                        content = file.readlines()
+                except (FileNotFoundError, FileExistsError):
+                    pass
+                self.assertListEqual(content, python_file.get_class_dict()[class_name].content)
+
+    def test_get_function_in_class(self):
+        methods_class = ['__init__', 'method1', 'method2', 'method3']
+
+        p1 = PythonFiles('tests/Initial_project_example/SeveralClassFileExample.py')
+        p1.get_class_in_file()
+
+        [p1.get_class_content(class_name) for class_name in p1.get_class_dict().keys()]
+        [p1.get_class_dict()[class_name].get_function_in_class() for class_name in p1.get_class_dict()]
+
+        [self.assertListEqual(list(class_object.get_methode_dict().keys()), methods_class)
+         for class_object in p1.get_class_dict().values()]
 
 
 if __name__ == '__main__':

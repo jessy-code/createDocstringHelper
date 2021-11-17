@@ -127,7 +127,3 @@ class Function:
             self.__docstring += Section('Raises', self.__raises, offset=self.get_indentation()).get_writable_section()
 
         self.__docstring += '\n' + self.get_indentation() + '"""\n'
-
-
-def remove_brackets_to_string(string):
-    return string.split('(')[1].split(')')[0]

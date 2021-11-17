@@ -2,6 +2,8 @@ from re import match, compile
 from Class import Class
 from Function import Function
 from shutil import move
+from OverallFunctions import extract_name_in_line, test_regex, add_content_to_string_from_list,\
+    get_object_name_from_regex
 
 
 class PythonFiles:
@@ -50,7 +52,7 @@ class PythonFiles:
 
     def get_function_in_file(self):
         self.__function_dict = {function_name: Function(function_name) for function_name in
-                                get_first_level_object_name_by_keyword(self.__python_file_content, 'def')}
+                                get_object_name_from_regex(self.__python_file_content, compile('^def.*: *$'))}
         return self.__function_dict
 
     def get_first_level_function_content(self, function_name):
@@ -59,7 +61,8 @@ class PythonFiles:
         stop_flag = compile('^[a-zA-Z0-9]' + '.*$')
 
         self.__function_dict[function_name].content = add_content_to_string_from_list(self.__python_file_content,
-                                                                                      self.__function_dict[function_name].content,
+                                                                                      self.__function_dict[
+                                                                                          function_name].content,
                                                                                       start_flag,
                                                                                       stop_flag)
 
@@ -103,33 +106,3 @@ class PythonFiles:
         except(FileNotFoundError, FileExistsError):
             print('Impossible to create file ' + tmp_file)
             raise
-
-
-def test_regex(string, keyword):
-    return match('^ *' + keyword + '.*: *$', string)
-
-
-def extract_name_in_line(line):
-    return (line.strip().split(' ')[1]).split('(')[0].replace(':', '')
-
-
-def get_object_name_by_keyword(file_content, keyword):
-    return [(line.strip().split(' ')[1]).split('(')[0].replace(':', '')
-            for line in file_content if match('^ *' + keyword + '.*: *$', line)]
-
-
-def get_first_level_object_name_by_keyword(file_content, keyword):
-    return [(line.strip().split(' ')[1]).split('(')[0].replace(':', '')
-            for line in file_content if match('^' + keyword + '.*: *$', line)]
-
-
-def add_content_to_string_from_list(list_of_line, content, start_flag, stop_flag):
-    flag = False
-    for line in list_of_line:
-        if match(stop_flag, line):
-            flag = False
-        if match(start_flag, line):
-            flag = True
-        if flag:
-            content.append(line)
-    return content
