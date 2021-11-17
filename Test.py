@@ -293,6 +293,28 @@ class MyTestCase(unittest.TestCase):
         [self.assertListEqual(list(class_object.get_methode_dict().keys()), methods_class)
          for class_object in p1.get_class_dict().values()]
 
+    def test_get_function_content_from_class_content(self):
+        p1 = PythonFiles('tests/Initial_project_example/SeveralClassFileExample.py')
+        p1.get_class_in_file()
+
+        [p1.get_class_content(class_name) for class_name in p1.get_class_dict().keys()]
+        [p1.get_class_dict()[class_name].get_function_in_class() for class_name in p1.get_class_dict()]
+
+        for class_object in p1.get_class_dict().values():
+            for method in class_object.get_methode_dict().values():
+                class_object.get_function_content_from_class_content(method.get_function_name())
+
+        init_content = []
+        with open('tests/object_contents/class2_init.py', 'r') as file:
+            init_content = file.readlines()
+
+        method2_content = []
+        with open('tests/object_contents/class2_method2.py', 'r') as file:
+            method2_content = file.readlines()
+
+        self.assertListEqual(p1.get_class_dict()['Class2'].get_methode_dict()['__init__'].content, init_content)
+        self.assertListEqual(p1.get_class_dict()['Class2'].get_methode_dict()['method2'].content, method2_content)
+
 
 if __name__ == '__main__':
     unittest.main()

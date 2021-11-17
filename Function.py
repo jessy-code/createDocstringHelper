@@ -1,6 +1,6 @@
-from re import match, compile, IGNORECASE
-from re import split as resplit
+from re import match, compile
 
+from OverallFunctions import get_indentation
 from Section import Section
 
 
@@ -95,11 +95,6 @@ class Function:
         self.__raises = [elt.strip() for elt in self.__raises]
         return self.__raises
 
-    def get_indentation(self):
-        indented_lines = [line for line in self.content if
-                          match(r'^ .*[a-zA-Z0-9]*$', line) and self.content.index(line) > 0]
-        return resplit(r'[a-z0-9]', indented_lines[0], flags=IGNORECASE)[0]
-
     def extract_already_docstring_existing(self):
         content_tmp = []
         self.__docstring = []
@@ -114,16 +109,16 @@ class Function:
         self.content = content_tmp
 
     def write_docstring(self):
-        self.__docstring += self.get_indentation() + '"""\n' + self.get_indentation() + '<TO BE COMPLETED>\n'
+        self.__docstring += get_indentation(self.content) + '"""\n' + get_indentation(self.content) + '<TO BE COMPLETED>\n'
 
         if self.__param_list:
             self.__docstring += Section('Parameters', self.__param_list,
-                                        offset=self.get_indentation()).get_writable_section()
+                                        offset=get_indentation(self.content)).get_writable_section()
 
         if self.__returns:
-            self.__docstring += Section('Returns', self.__returns, offset=self.get_indentation()).get_writable_section()
+            self.__docstring += Section('Returns', self.__returns, offset=get_indentation(self.content)).get_writable_section()
 
         if self.__raises:
-            self.__docstring += Section('Raises', self.__raises, offset=self.get_indentation()).get_writable_section()
+            self.__docstring += Section('Raises', self.__raises, offset=get_indentation(self.content)).get_writable_section()
 
-        self.__docstring += '\n' + self.get_indentation() + '"""\n'
+        self.__docstring += '\n' + get_indentation(self.content) + '"""\n'

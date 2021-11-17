@@ -1,4 +1,5 @@
-from re import match
+from re import match, IGNORECASE
+from re import split as resplit
 
 
 def test_regex(string, keyword):
@@ -33,3 +34,9 @@ def add_content_to_string_from_list(list_of_line, content, start_flag, stop_flag
 
 def remove_brackets_to_string(string):
     return string.split('(')[1].split(')')[0]
+
+
+def get_indentation(string_list):
+    indented_lines = [line for line in string_list if
+                      match(r'^ .*[a-zA-Z0-9]*$', line) and string_list.index(line) > 0]
+    return resplit(r'[a-z0-9]', indented_lines[0], flags=IGNORECASE)[0]

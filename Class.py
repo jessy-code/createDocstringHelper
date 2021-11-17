@@ -1,5 +1,5 @@
 from Function import Function
-from OverallFunctions import get_object_name_from_regex
+from OverallFunctions import get_object_name_from_regex, add_content_to_string_from_list, get_indentation
 from Section import Section
 from re import compile
 
@@ -35,6 +35,21 @@ class Class:
         self.__methode_dict = {function_name: Function(function_name) for function_name in
                                get_object_name_from_regex(self.content, compile('^ *def.*: *$'))}
         return self.__methode_dict
+
+    def get_function_content_from_class_content(self, function_name):
+        self.__methode_dict[function_name].content = []
+        start_flag = compile('^ *' + 'def ' + function_name + '\(.*: *$')
+        stop_flag = compile('^' + get_indentation(self.content) + '[a-zA-Z0-9]' + '.*$')
+
+        self.__methode_dict[function_name].content = add_content_to_string_from_list(self.content,
+                                                                                      self.__methode_dict[
+                                                                                          function_name].content,
+                                                                                      start_flag,
+                                                                                      stop_flag)
+
+        self.__methode_dict[function_name].extract_already_docstring_existing()
+
+        return self.__methode_dict[function_name]
 
     def write_docstring(self):
         self.__docstring += Section('Parameters', self.__parm_list).get_writable_section() + \

@@ -25,8 +25,9 @@ def other_function(param1, param2='foo'):
 
 class Class3:
 
-    def __init__(self, attr1):
+    def __init__(self, attr1, attr2):
         self.param1 = attr1
+        self.param1 = attr2
 
     def method1(self):
         pass
