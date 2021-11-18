@@ -202,7 +202,7 @@ class MyTestCase(unittest.TestCase):
         p2.get_function_in_file()
         p2.write_first_level_function_docstring()
 
-        documented_function_file = PythonFiles('tests/documented_project_example/SeveralClassFileExample.py')
+        documented_function_file = PythonFiles('tests/documented_project/SeveralClassFileExample.py')
         documented_function_file.get_function_in_file()
 
         [documented_function_file.get_first_level_function_content(func)
@@ -327,8 +327,58 @@ class MyTestCase(unittest.TestCase):
                 class_object.get_function_content_from_class_content(method.get_function_name())
                 method.get_param_list_from_content()
 
-        self.assertListEqual(p1.get_class_dict()['Class2'].get_param_list_from_class_content(), ['attr1'])
-        self.assertListEqual(p1.get_class_dict()['Class3'].get_param_list_from_class_content(), ['attr1', 'attr2'])
+        self.assertListEqual(p1.get_class_dict()['Class2'].get_param_list_from_class_content(), ['self', 'attr1'])
+        self.assertListEqual(p1.get_class_dict()['Class3'].get_param_list_from_class_content(),
+                             ['self', 'attr1', 'attr2'])
+
+    def test_write_complete_docstring(self):
+        if isdir('tests/modified_project_example'):
+            rmtree('tests/modified_project_example')
+        copytree('tests/Initial_project_example', 'tests/modified_project_example')
+
+        p1 = PythonFiles('tests/modified_project_example/SeveralClassFileExample.py')
+
+        p1.get_function_in_file()
+        p1.get_class_in_file()
+
+        p1.write_first_level_function_docstring()
+        p1.write_class_docstring()
+
+        p2 = PythonFiles('tests/modified_project_example/OneClassFileExample.py')
+
+        p2.get_function_in_file()
+        p2.get_class_in_file()
+
+        p2.write_first_level_function_docstring()
+        p2.write_class_docstring()
+
+        p3 = PythonFiles('tests/modified_project_example/OnlyAClassFileExample.py')
+
+        p3.get_function_in_file()
+        p3.get_class_in_file()
+
+        p3.write_first_level_function_docstring()
+        p3.write_class_docstring()
+
+        one_class_file_example_documented = []
+        with open('tests/documented_project/OneClassFileExample.py', 'r') as file:
+            one_class_file_example_documented = file.readlines()
+
+        only_a_class_file_example = []
+        with open('tests/documented_project/OnlyAClassFileExample.py', 'r') as file:
+            only_a_class_file_example = file.readlines()
+
+        several_class_file_example = []
+        with open('tests/documented_project/SeveralClassFileExample.py', 'r') as file:
+            several_class_file_example = file.readlines()
+
+        self.assertListEqual(one_class_file_example_documented, p2.get_python_file_content())
+
+        self.assertListEqual(only_a_class_file_example, p3.get_python_file_content())
+
+        self.assertListEqual(several_class_file_example, p1.get_python_file_content())
+
+        rmtree('tests/modified_project_example')
 
 
 if __name__ == '__main__':

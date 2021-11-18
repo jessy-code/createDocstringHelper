@@ -2,7 +2,7 @@ from re import match, compile
 from Class import Class
 from Function import Function
 from shutil import move
-from OverallFunctions import extract_name_in_line, test_regex, add_content_to_string_from_list,\
+from OverallFunctions import extract_name_in_line, test_regex, add_content_to_string_from_list, \
     get_object_name_from_regex
 
 
@@ -83,6 +83,7 @@ class PythonFiles:
                ''.join((self.__function_dict[function_name].content[1:]))
 
     def write_first_level_function_docstring(self):
+        self.__call__()
         try:
             tmp_file = self.__python_path.split('.py')[0] + '_tmp' + '.py'
             with open(tmp_file, 'w') as file:
@@ -102,6 +103,61 @@ class PythonFiles:
                         file.write(line)
 
             move(tmp_file, self.__python_path)
+            self.__call__()
+
+        except(FileNotFoundError, FileExistsError):
+            print('Impossible to create file ' + tmp_file)
+            raise
+
+    def build_string_method_with_docstring(self, class_name, function_name):
+        return ''.join(self.__class_dict[class_name].get_methode_dict()[function_name].get_docstring())
+
+    def write_method_docstring(self, class_name, method_name, file):
+        self.__class_dict[class_name].prepare_docstring_to_all_methods()
+        for line in self.__class_dict[class_name].content:
+            if match(' .*def ' + method_name + '\(.*:.*$', line):
+                file.write(self.build_string_method_with_docstring(class_name, method_name))
+
+    def init_class_docstring(self, class_name):
+        self.get_class_content(class_name)
+        self.__class_dict[class_name].get_function_in_class()
+        self.__class_dict[class_name].prepare_docstring_to_all_methods()
+        self.__class_dict[class_name].get_param_list_from_class_content()
+        self.__class_dict[class_name].write_docstring()
+
+    def build_string_class_with_docstring(self, class_name):
+        return ''.join(self.__class_dict[class_name].get_docstring()) \
+
+
+    def write_class_docstring(self):
+        self.__call__()
+        try:
+            tmp_file = self.__python_path.split('.py')[0] + '_tmp' + '.py'
+            with open(tmp_file, 'w') as file:
+                flag = False
+
+                for line in self.__python_file_content:
+                    file.write(line)
+                    if match('^[a-zA-Z0-9].*$', line):
+                        flag = False
+
+                    if match('^class .*:.*$', line):
+                        flag = True
+
+                        try:
+                            class_name = line.split('class ')[1].split(':')[0]
+                        except:
+                            class_name = line.split('class ')[1].split('(')[0]
+                        self.init_class_docstring(class_name)
+
+                        file.write(self.build_string_class_with_docstring(class_name))
+
+                    if flag and match('^ .*def .*$', line):
+                        method_name = line.split('def ')[1].split('(')[0]
+                        self.write_method_docstring(class_name, method_name, file)
+
+            move(tmp_file, self.__python_path)
+            self.__call__()
 
         except(FileNotFoundError, FileExistsError):
             print('Impossible to create file ' + tmp_file)

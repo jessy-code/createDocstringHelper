@@ -10,7 +10,7 @@ class Class:
         self.__class_name = class_name
         self.__methode_dict = {}
         self.__parm_list = []
-        self.__docstring = '"""\n   <TO BE COMPLETED>\n\n\n'
+        self.__docstring = ''
         self.content = []
 
     def __eq__(self, other_class):
@@ -42,19 +42,40 @@ class Class:
         stop_flag = compile('^' + get_indentation(self.content) + '[a-zA-Z0-9]' + '.*$')
 
         self.__methode_dict[function_name].content = add_content_to_string_from_list(self.content,
-                                                                                      self.__methode_dict[
-                                                                                          function_name].content,
-                                                                                      start_flag,
-                                                                                      stop_flag)
+                                                                                     self.__methode_dict[
+                                                                                         function_name].content,
+                                                                                     start_flag,
+                                                                                     stop_flag)
 
         self.__methode_dict[function_name].extract_already_docstring_existing()
 
         return self.__methode_dict[function_name]
 
     def get_param_list_from_class_content(self):
-        self.__parm_list = self.__methode_dict['__init__'].get_param_list()[1:]
+        self.__parm_list = self.__methode_dict['__init__'].get_param_list()
         return self.__parm_list
 
+    def prepare_docstring_to_all_methods(self):
+        self.get_function_in_class()
+        [self.get_function_content_from_class_content(function_name) for function_name in
+         list(self.__methode_dict.keys())]
+
+        [method.get_param_list_from_content() for method in self.__methode_dict.values()]
+        [method.get_return_list_from_content() for method in self.__methode_dict.values()]
+        [method.get_raises_from_content() for method in self.__methode_dict.values()]
+        [method.write_docstring() for method in self.__methode_dict.values()]
+
     def write_docstring(self):
-        self.__docstring += Section('Parameters', self.__parm_list).get_writable_section() + \
-                            Section('Methods', self.__methode_dict).get_writable_section() + '"""'
+        if self.content:
+            self.__docstring += get_indentation(self.content) + '"""\n' + get_indentation(self.content) + \
+                                '<TO BE COMPLETED>\n'
+            self.__docstring += Section('Parameters', self.__parm_list,
+                                        offset=get_indentation(self.content)).get_writable_section() + \
+                                Section('Methods', self.__methode_dict.keys(),
+                                        offset=get_indentation(self.content)).get_writable_section() + \
+                                get_indentation(self.content) + '"""'
+        else:
+            self.__docstring += '"""\n' + '<TO BE COMPLETED>\n'
+            self.__docstring += Section('Parameters', self.__parm_list).get_writable_section() + \
+                                Section('Methods', self.__methode_dict.keys()).get_writable_section() + \
+                                '"""'

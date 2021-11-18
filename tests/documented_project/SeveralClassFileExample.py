@@ -1,20 +1,84 @@
-import Class1
+import OneClassFileExample
 
 
 class Class2:
+    """
+    <TO BE COMPLETED>
 
+    Parameters
+    __________
+    self : <TO BE COMPLETED>
+
+    attr1 : <TO BE COMPLETED>
+
+    Methods
+    _______
+    __init__ : <TO BE COMPLETED>
+
+    method1 : <TO BE COMPLETED>
+
+    method2 : <TO BE COMPLETED>
+
+    method3 : <TO BE COMPLETED>
+    """
     def __init__(self, attr1):
+        """
+        <TO BE COMPLETED>
+
+        Parameters
+        __________
+        self : <TO BE COMPLETED>
+
+        attr1 : <TO BE COMPLETED>
+
+        """
         self.param1 = attr1
 
     def method1(self):
+        """
+        <TO BE COMPLETED>
+
+        Parameters
+        __________
+        self : <TO BE COMPLETED>
+
+        """
         pass
 
     def method2(self, param1):
-        obj1 = Class1()
+        """
+        <TO BE COMPLETED>
+
+        Parameters
+        __________
+        self : <TO BE COMPLETED>
+
+        param1 : <TO BE COMPLETED>
+
+        """
+        obj1 = OneClassFileExample()
         obj1.method1()
         pass
 
     def method3(self, param2, param3='foo'):
+        """
+        <TO BE COMPLETED>
+
+        Parameters
+        __________
+        self : <TO BE COMPLETED>
+
+        param2 : <TO BE COMPLETED>
+
+        param3='foo' : <TO BE COMPLETED>
+
+        Returns
+        _______
+        param2 : <TO BE COMPLETED>
+
+        param3 : <TO BE COMPLETED>
+
+        """
         return param2, param3
 
 
@@ -40,17 +104,86 @@ def other_function(param1, param2='foo'):
 
 
 class Class3:
+    """
+    <TO BE COMPLETED>
 
-    def __init__(self, attr1):
+    Parameters
+    __________
+    self : <TO BE COMPLETED>
+
+    attr1 : <TO BE COMPLETED>
+
+    attr2 : <TO BE COMPLETED>
+
+    Methods
+    _______
+    __init__ : <TO BE COMPLETED>
+
+    method1 : <TO BE COMPLETED>
+
+    method2 : <TO BE COMPLETED>
+
+    method3 : <TO BE COMPLETED>
+    """
+    def __init__(self, attr1, attr2):
+        """
+        <TO BE COMPLETED>
+
+        Parameters
+        __________
+        self : <TO BE COMPLETED>
+
+        attr1 : <TO BE COMPLETED>
+
+        attr2 : <TO BE COMPLETED>
+
+        """
         self.param1 = attr1
+        self.param2 = attr2
 
     def method1(self):
+        """
+        <TO BE COMPLETED>
+
+        Parameters
+        __________
+        self : <TO BE COMPLETED>
+
+        """
         pass
 
     def method2(self, param1):
+        """
+        <TO BE COMPLETED>
+
+        Parameters
+        __________
+        self : <TO BE COMPLETED>
+
+        param1 : <TO BE COMPLETED>
+
+        """
         pass
 
     def method3(self, param2, param3='foo'):
+        """
+        <TO BE COMPLETED>
+
+        Parameters
+        __________
+        self : <TO BE COMPLETED>
+
+        param2 : <TO BE COMPLETED>
+
+        param3='foo' : <TO BE COMPLETED>
+
+        Returns
+        _______
+        param2 : <TO BE COMPLETED>
+
+        param3 : <TO BE COMPLETED>
+
+        """
         return param2, param3
 
 

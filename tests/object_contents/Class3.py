@@ -2,7 +2,7 @@ class Class3:
 
     def __init__(self, attr1, attr2):
         self.param1 = attr1
-        self.param1 = attr2
+        self.param2 = attr2
 
     def method1(self):
         pass
