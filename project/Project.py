@@ -1,9 +1,7 @@
-"""This module is designed to modelling a python project"""
 import os
 
 
 class Project:
-    """A class which modelling a python project"""
 
     def __init__(self, root_path):
         self.__root_path = root_path

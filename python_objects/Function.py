@@ -1,7 +1,7 @@
 from re import match, compile
 
-from OverallFunctions import get_indentation
-from Section import Section
+from common.OverallFunctions import get_indentation
+from common.Section import Section
 
 
 class Function:

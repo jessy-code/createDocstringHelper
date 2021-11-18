@@ -1,6 +1,6 @@
-from Function import Function
-from OverallFunctions import get_object_name_from_regex, add_content_to_string_from_list, get_indentation
-from Section import Section
+from python_objects.Function import Function
+from common.OverallFunctions import get_object_name_from_regex, add_content_to_string_from_list, get_indentation
+from common.Section import Section
 from re import compile
 
 

@@ -1,8 +1,8 @@
 from re import match, compile
-from Class import Class
-from Function import Function
+from python_objects.Class import Class
+from python_objects.Function import Function
 from shutil import move
-from OverallFunctions import extract_name_in_line, test_regex, add_content_to_string_from_list, \
+from common.OverallFunctions import extract_name_in_line, test_regex, add_content_to_string_from_list, \
     get_object_name_from_regex
 
 
@@ -21,7 +21,7 @@ class PythonFiles:
             with open(self.__python_path, 'r') as python_file:
                 self.__python_file_content = python_file.readlines()
 
-        except FileNotFoundError:
+        except (FileNotFoundError, TypeError):
             raise
 
     def get_python_file_content(self):
