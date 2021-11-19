@@ -6,7 +6,7 @@ from python_objects.Class import Class
 from python_objects.Function import Function
 from shutil import copytree, rmtree
 from os.path import isdir
-from os import getcwd
+from os import getcwd, chdir
 from common.OverallFunctions import get_object_name_by_keyword, test_regex, extract_name_in_line
 
 
@@ -23,10 +23,12 @@ def read_file_content(file_path):
 class MyTestCase(unittest.TestCase):
 
     def test_project(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
         p1 = Project('Initial_project_example')
-        real_list_file = ['tests/Initial_project_example/OneClassFileExample.py',
-                          'tests/Initial_project_example/SeveralClassFileExample.py',
-                          'tests/Initial_project_example/OnlyAClassFileExample.py']
+        real_list_file = ['Initial_project_example/OneClassFileExample.py',
+                          'Initial_project_example/SeveralClassFileExample.py',
+                          'Initial_project_example/OnlyAClassFileExample.py']
         list_file_get_by_function = p1.get_py_file_list()
 
         real_list_file.sort()
@@ -57,6 +59,9 @@ class MyTestCase(unittest.TestCase):
                                                     '<TO BE COMPLETED>\n')
 
     def test_python_files(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
         p1 = PythonFiles('Initial_project_example/OneClassFileExample.py')
         with open('Initial_project_example/OneClassFileExample.py', 'r') as file:
             file_content = file.readlines()
@@ -72,8 +77,8 @@ class MyTestCase(unittest.TestCase):
         p2 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
         self.assertDictEqual(p2.get_class_in_file(), {'Class2': Class('Class2'), 'Class3': Class('Class3')})
 
-        p2.get_function_in_file()
-        self.assertDictEqual(p2.get_function_in_file(), {'output_function': Function('output_function'),
+        p2.get_first_level_function_in_file()
+        self.assertDictEqual(p2.get_first_level_function_in_file(), {'output_function': Function('output_function'),
                                                          'output_function2': Function('output_function2'),
                                                          'output_function3': Function('output_function3'),
                                                          'output_function4': Function('output_function4'),
@@ -81,11 +86,14 @@ class MyTestCase(unittest.TestCase):
                                                          'another_one': Function('another_one'),
                                                          'new_test_function': Function('new_test_function'),
                                                          'empty_function': Function('empty_function')
-                                                         })
+                                                                     })
 
     def test_get_function_content_python_file(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
         p2 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
-        p2.get_function_in_file()
+        p2.get_first_level_function_in_file()
 
         p2.get_first_level_function_content('output_function')
         p2.get_first_level_function_content('other_function')
@@ -101,6 +109,9 @@ class MyTestCase(unittest.TestCase):
                              read_file_content('object_contents/another_one.py'))
 
     def test_get_class_content(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
         p1 = PythonFiles('Initial_project_example/OneClassFileExample.py')
         p2 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
         p4 = PythonFiles('Initial_project_example/OnlyAClassFileExample.py')
@@ -123,14 +134,18 @@ class MyTestCase(unittest.TestCase):
             for class_name in python_file.get_class_dict().keys():
                 content = []
                 try:
-                    with open('tests/object_contents/' + class_name + '.py', 'r') as file:
+                    with open('object_contents/' + class_name + '.py', 'r') as file:
                         content = file.readlines()
                 except (FileNotFoundError, FileExistsError):
                     pass
                 self.assertListEqual(content, python_file.get_class_dict()[class_name].content)
 
     def test_function_param_list_from_content(self):
-        p2 = PythonFiles(getcwd() + '/Initial_project_example/SeveralClassFileExample.py')
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
+        p2 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
+
         test_func_list = ['other_function',
                           'output_function',
                           'output_function2',
@@ -140,7 +155,7 @@ class MyTestCase(unittest.TestCase):
                           'new_test_function',
                           'empty_function']
 
-        func_dict = p2.get_function_in_file()
+        func_dict = p2.get_first_level_function_in_file()
 
         [p2.get_first_level_function_content(func) for func in test_func_list]
         [func.get_param_list_from_content() for func in func_dict.values()
@@ -156,8 +171,11 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p2.get_function_dict()['empty_function'].get_param_list(), ['param'])
 
     def test_get_return_list_from_content(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
         p2 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
-        func_dict = p2.get_function_in_file()
+        func_dict = p2.get_first_level_function_in_file()
 
         p2.get_first_level_function_content('output_function')
         p2.get_first_level_function_content('other_function')
@@ -174,8 +192,10 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p2.get_function_dict()['empty_function'].get_returns(), [])
 
     def test_get_raises_from_content(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
         p2 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
-        func_dict = p2.get_function_in_file()
+        func_dict = p2.get_first_level_function_in_file()
 
         test_function_list = ['output_function',
                               'output_function2',
@@ -195,16 +215,19 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p2.get_function_dict()['new_test_function'].get_raises(), [])
 
     def test_write_first_level_function_docstring(self):
-        if isdir('tests/modified_project_example'):
-            rmtree('tests/modified_project_example')
-        copytree('Initial_project_example', 'tests/modified_project_example')
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
 
-        p2 = PythonFiles('tests/modified_project_example/SeveralClassFileExample.py')
-        p2.get_function_in_file()
+        if isdir('modified_project_example'):
+            rmtree('modified_project_example')
+        copytree('Initial_project_example', 'modified_project_example')
+
+        p2 = PythonFiles('modified_project_example/SeveralClassFileExample.py')
+        p2.get_first_level_function_in_file()
         p2.write_first_level_function_docstring()
 
         documented_function_file = PythonFiles('documented_project/SeveralClassFileExample.py')
-        documented_function_file.get_function_in_file()
+        documented_function_file.get_first_level_function_in_file()
 
         [documented_function_file.get_first_level_function_content(func)
          for func in documented_function_file.get_function_dict().keys()]
@@ -212,9 +235,12 @@ class MyTestCase(unittest.TestCase):
                               documented_function_file.get_function_dict()[func].content)
          for func in p2.get_function_dict().keys()]
 
-        rmtree('tests/modified_project_example')
+        rmtree('modified_project_example')
 
     def test_class(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
         param_list_example = ['param1', 'param2', 'param3']
 
         c1 = Class('ClassTest')
@@ -225,6 +251,9 @@ class MyTestCase(unittest.TestCase):
         [self.assertIn(param, c1.get_docstring()) for param in param_list_example]
 
     def test_function(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
         param_list_example = ['param1', 'param2', 'param3']
         return_list_example = ['return1', 'return2']
         raise_list_example = ['AttributeError', 'ValueError']
@@ -243,6 +272,9 @@ class MyTestCase(unittest.TestCase):
         [self.assertIn(cur_raise, f1.get_docstring()) for cur_raise in raise_list_example]
 
     def test_test_regex(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
         self.assertIsNotNone(test_regex('   class Class1:   ', 'class'))
         self.assertIsNotNone(test_regex("   def method3(self, param2, param3='foo'):    ", 'def'))
 
@@ -250,10 +282,16 @@ class MyTestCase(unittest.TestCase):
         self.assertIsNone(test_regex("   def method3(self, param2, param3='foo'):    qsdfjsf", 'def'))
 
     def test_extract_name_in_line(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
         self.assertEqual(extract_name_in_line('   class Class1:   lsdjfq'), 'Class1')
         self.assertEqual(extract_name_in_line("   def method3(self, param2, param3='foo'):    qsdfjsf"), 'method3')
 
     def test_get_class_content(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
         p1 = PythonFiles('Initial_project_example/OneClassFileExample.py')
         p2 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
         p4 = PythonFiles('Initial_project_example/OnlyAClassFileExample.py')
@@ -276,13 +314,16 @@ class MyTestCase(unittest.TestCase):
             for class_name in python_file.get_class_dict().keys():
                 content = []
                 try:
-                    with open('tests/object_contents/' + class_name + '.py', 'r') as file:
+                    with open('object_contents/' + class_name + '.py', 'r') as file:
                         content = file.readlines()
                 except (FileNotFoundError, FileExistsError):
                     pass
                 self.assertListEqual(content, python_file.get_class_dict()[class_name].content)
 
     def test_get_function_in_class(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
         methods_class = ['__init__', 'method1', 'method2', 'method3']
 
         p1 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
@@ -295,6 +336,9 @@ class MyTestCase(unittest.TestCase):
          for class_object in p1.get_class_dict().values()]
 
     def test_get_function_content_from_class_content(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
         p1 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
         p1.get_class_in_file()
 
@@ -317,6 +361,9 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p1.get_class_dict()['Class2'].get_methode_dict()['method2'].content, method2_content)
 
     def test_get_param_list_from_class_content(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
         p1 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
         p1.get_class_in_file()
 
@@ -333,13 +380,16 @@ class MyTestCase(unittest.TestCase):
                              ['self', 'attr1', 'attr2'])
 
     def test_write_complete_docstring(self):
+        if getcwd() == "D:\python\createDocstringHelper":
+            chdir("tests")
+
         if isdir('modified_project_example'):
             rmtree('modified_project_example')
         copytree('Initial_project_example', 'modified_project_example')
 
         p1 = PythonFiles('modified_project_example/SeveralClassFileExample.py')
 
-        p1.get_function_in_file()
+        p1.get_first_level_function_in_file()
         p1.get_class_in_file()
 
         p1.write_first_level_function_docstring()
@@ -347,7 +397,7 @@ class MyTestCase(unittest.TestCase):
 
         p2 = PythonFiles('modified_project_example/OneClassFileExample.py')
 
-        p2.get_function_in_file()
+        p2.get_first_level_function_in_file()
         p2.get_class_in_file()
 
         p2.write_first_level_function_docstring()
@@ -355,7 +405,7 @@ class MyTestCase(unittest.TestCase):
 
         p3 = PythonFiles('modified_project_example/OnlyAClassFileExample.py')
 
-        p3.get_function_in_file()
+        p3.get_first_level_function_in_file()
         p3.get_class_in_file()
 
         p3.write_first_level_function_docstring()
