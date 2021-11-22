@@ -311,7 +311,7 @@ class PythonFiles:
                         if not check_if_python_class_contains_docstring(self.__class_dict[class_name].content):
                             file.write(self.build_string_class_with_docstring(class_name))
 
-                    if flag and match('^ .*def .*$', line):
+                    if flag and match('^ *def .*$', line):
                         method_name = line.split('def ')[1].split('(')[0]
                         if not self.__class_dict[class_name].get_methode_dict()[method_name].docstring_already_exists:
                             self.write_method_docstring(class_name, method_name, file)

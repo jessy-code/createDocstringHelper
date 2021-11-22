@@ -119,6 +119,13 @@ def get_indentation(string_list):
 
 
 def check_if_python_class_contains_docstring(class_content):
+    """
+    Function which return true if a python class contains a docstring
+
+    Parameters
+    __________
+    class_content : list of string which contains the class content
+    """
     for line in class_content:
         if match('^ .*def', line):
             return False

@@ -5,6 +5,9 @@ from file.PythonFiles import PythonFiles
 
 
 def get_user_inputs():
+    """
+    Function to get user inputs
+    """
     # Input variable definition
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
                                      description='Script which initiate the docstring documentation in a given python '
