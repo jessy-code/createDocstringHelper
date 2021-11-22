@@ -48,6 +48,7 @@ class PythonFiles:
 
     write_class_docstring : write the class's documentation in the python file
     """
+
     def __init__(self, python_file_path):
         self.__python_path = python_file_path
         self.__python_file_content = []
@@ -274,8 +275,7 @@ class PythonFiles:
         class_name : the class we want to document
 
         """
-        return ''.join(self.__class_dict[class_name].get_docstring()) \
-
+        return ''.join(self.__class_dict[class_name].get_docstring()) + '\n'
 
     def write_class_docstring(self):
         """
@@ -312,7 +312,8 @@ class PythonFiles:
 
                     if flag and match('^ .*def .*$', line):
                         method_name = line.split('def ')[1].split('(')[0]
-                        self.write_method_docstring(class_name, method_name, file)
+                        if not self.__class_dict[class_name].get_methode_dict()[method_name].docstring_already_exists:
+                            self.write_method_docstring(class_name, method_name, file)
 
             move(tmp_file, self.__python_path)
             self.__call__()

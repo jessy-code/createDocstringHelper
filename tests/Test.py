@@ -442,10 +442,10 @@ class MyTestCase(unittest.TestCase):
         p1 = PythonFiles('modified_project_example/SeveralClassFileExample.py')
 
         p1.get_first_level_function_in_file()
-        #p1.get_class_in_file()
+        p1.get_class_in_file()
 
         p1.write_first_level_function_docstring()
-        #p1.write_class_docstring()
+        p1.write_class_docstring()
 
         several_class_file_example = []
         with open('documented_project/SeveralClassFileExample.py', 'r') as file:
