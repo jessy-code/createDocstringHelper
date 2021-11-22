@@ -203,7 +203,10 @@ class PythonFiles:
                         flag = True
                         function_name = line.split('def ')[1].split('(')[0]
                         self.init_first_level_function_docstring(function_name)
-                        file.write(self.build_string_function_with_docstring(function_name))
+                        if not self.__function_dict[function_name].docstring_already_exists:
+                            file.write(self.build_string_function_with_docstring(function_name))
+                        else:
+                            flag = False
 
                     if not flag:
                         file.write(line)

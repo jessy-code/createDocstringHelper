@@ -49,6 +49,7 @@ class Function:
         self.__raises = []
         self.__docstring = ''
         self.content = []
+        self.docstring_already_exists = False
 
     def __eq__(self, other_function):
         """
@@ -194,9 +195,10 @@ class Function:
         self.__docstring = []
         flag = False
         for line in self.content:
-            if match('^ *""".*$', line):
+            if match('^ *""".*$', line) or match("^ *'''.*$", line):
+                self.docstring_already_exists = True
                 flag = not flag
-            if flag or match('^ *""".*$', line):
+            if flag or match('^ *""".*$', line) or match("^ *'''.*$", line):
                 self.__docstring.append(line)
             if not flag and not match('^ *""".*$', line):
                 content_tmp.append(line)

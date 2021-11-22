@@ -79,13 +79,13 @@ class MyTestCase(unittest.TestCase):
 
         p2.get_first_level_function_in_file()
         self.assertDictEqual(p2.get_first_level_function_in_file(), {'output_function': Function('output_function'),
-                                                         'output_function2': Function('output_function2'),
-                                                         'output_function3': Function('output_function3'),
-                                                         'output_function4': Function('output_function4'),
-                                                         'other_function': Function('other_function'),
-                                                         'another_one': Function('another_one'),
-                                                         'new_test_function': Function('new_test_function'),
-                                                         'empty_function': Function('empty_function')
+                                                                     'output_function2': Function('output_function2'),
+                                                                     'output_function3': Function('output_function3'),
+                                                                     'output_function4': Function('output_function4'),
+                                                                     'other_function': Function('other_function'),
+                                                                     'another_one': Function('another_one'),
+                                                                     'new_test_function': Function('new_test_function'),
+                                                                     'empty_function': Function('empty_function')
                                                                      })
 
     def test_get_function_content_python_file(self):
@@ -426,6 +426,30 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(one_class_file_example_documented, p2.get_python_file_content())
 
         self.assertListEqual(only_a_class_file_example, p3.get_python_file_content())
+
+        self.assertListEqual(several_class_file_example, p1.get_python_file_content())
+
+        rmtree('modified_project_example')
+
+    def test_partially_documented_file(self):
+        if not getcwd().split('\\').__contains__('tests'):
+            chdir("tests")
+
+        if isdir('modified_project_example'):
+            rmtree('modified_project_example')
+        copytree('partially_documented_project', 'modified_project_example')
+
+        p1 = PythonFiles('modified_project_example/SeveralClassFileExample.py')
+
+        p1.get_first_level_function_in_file()
+        #p1.get_class_in_file()
+
+        p1.write_first_level_function_docstring()
+        #p1.write_class_docstring()
+
+        several_class_file_example = []
+        with open('documented_project/SeveralClassFileExample.py', 'r') as file:
+            several_class_file_example = file.readlines()
 
         self.assertListEqual(several_class_file_example, p1.get_python_file_content())
 
