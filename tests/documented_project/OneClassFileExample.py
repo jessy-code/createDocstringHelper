@@ -20,6 +20,7 @@ class Class1:
 
     open_file : <TO BE COMPLETED>
     """
+
     def __init__(self, attr1):
         """
         <TO BE COMPLETED>

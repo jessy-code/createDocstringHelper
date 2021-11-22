@@ -21,6 +21,7 @@ class Class2:
 
     method3 : <TO BE COMPLETED>
     """
+
     def __init__(self, attr1):
         """
         <TO BE COMPLETED>
@@ -125,6 +126,7 @@ class Class3:
 
     method3 : <TO BE COMPLETED>
     """
+
     def __init__(self, attr1, attr2):
         """
         <TO BE COMPLETED>

@@ -423,11 +423,14 @@ class MyTestCase(unittest.TestCase):
         with open('documented_project/SeveralClassFileExample.py', 'r') as file:
             several_class_file_example = file.readlines()
 
-        self.assertListEqual(one_class_file_example_documented, p2.get_python_file_content())
+        self.assertListEqual([elt for elt in one_class_file_example_documented if elt != '\n'],
+                             [elt for elt in p2.get_python_file_content() if elt != '\n'])
 
-        self.assertListEqual(only_a_class_file_example, p3.get_python_file_content())
+        self.assertListEqual([elt for elt in only_a_class_file_example if elt != '\n'],
+                             [elt for elt in p3.get_python_file_content() if elt != '\n'])
 
-        self.assertListEqual(several_class_file_example, p1.get_python_file_content())
+        self.assertListEqual([elt for elt in several_class_file_example if elt != '\n'],
+                             [elt for elt in p1.get_python_file_content() if elt != '\n'])
 
         rmtree('modified_project_example')
 
@@ -451,7 +454,8 @@ class MyTestCase(unittest.TestCase):
         with open('documented_project/SeveralClassFileExample.py', 'r') as file:
             several_class_file_example = file.readlines()
 
-        self.assertListEqual(several_class_file_example, p1.get_python_file_content())
+        self.assertListEqual([elt for elt in several_class_file_example if elt != '\n'],
+                             [elt for elt in p1.get_python_file_content() if elt != '\n'])
 
         rmtree('modified_project_example')
 
