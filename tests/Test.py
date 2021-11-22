@@ -23,7 +23,7 @@ def read_file_content(file_path):
 class MyTestCase(unittest.TestCase):
 
     def test_project(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
         p1 = Project('Initial_project_example')
         real_list_file = ['Initial_project_example/OneClassFileExample.py',
@@ -59,7 +59,7 @@ class MyTestCase(unittest.TestCase):
                                                     '<TO BE COMPLETED>\n')
 
     def test_python_files(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         p1 = PythonFiles('Initial_project_example/OneClassFileExample.py')
@@ -89,7 +89,7 @@ class MyTestCase(unittest.TestCase):
                                                                      })
 
     def test_get_function_content_python_file(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         p2 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
@@ -109,7 +109,7 @@ class MyTestCase(unittest.TestCase):
                              read_file_content('object_contents/another_one.py'))
 
     def test_get_class_content(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         p1 = PythonFiles('Initial_project_example/OneClassFileExample.py')
@@ -141,7 +141,7 @@ class MyTestCase(unittest.TestCase):
                 self.assertListEqual(content, python_file.get_class_dict()[class_name].content)
 
     def test_function_param_list_from_content(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         p2 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
@@ -171,7 +171,7 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p2.get_function_dict()['empty_function'].get_param_list(), ['param'])
 
     def test_get_return_list_from_content(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         p2 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
@@ -192,7 +192,7 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p2.get_function_dict()['empty_function'].get_returns(), [])
 
     def test_get_raises_from_content(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
         p2 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
         func_dict = p2.get_first_level_function_in_file()
@@ -215,7 +215,7 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p2.get_function_dict()['new_test_function'].get_raises(), [])
 
     def test_write_first_level_function_docstring(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         if isdir('modified_project_example'):
@@ -238,7 +238,7 @@ class MyTestCase(unittest.TestCase):
         rmtree('modified_project_example')
 
     def test_class(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         param_list_example = ['param1', 'param2', 'param3']
@@ -251,7 +251,7 @@ class MyTestCase(unittest.TestCase):
         [self.assertIn(param, c1.get_docstring()) for param in param_list_example]
 
     def test_function(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         param_list_example = ['param1', 'param2', 'param3']
@@ -272,7 +272,7 @@ class MyTestCase(unittest.TestCase):
         [self.assertIn(cur_raise, f1.get_docstring()) for cur_raise in raise_list_example]
 
     def test_test_regex(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         self.assertIsNotNone(test_regex('   class Class1:   ', 'class'))
@@ -282,14 +282,14 @@ class MyTestCase(unittest.TestCase):
         self.assertIsNone(test_regex("   def method3(self, param2, param3='foo'):    qsdfjsf", 'def'))
 
     def test_extract_name_in_line(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         self.assertEqual(extract_name_in_line('   class Class1:   lsdjfq'), 'Class1')
         self.assertEqual(extract_name_in_line("   def method3(self, param2, param3='foo'):    qsdfjsf"), 'method3')
 
     def test_get_class_content(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         p1 = PythonFiles('Initial_project_example/OneClassFileExample.py')
@@ -321,7 +321,7 @@ class MyTestCase(unittest.TestCase):
                 self.assertListEqual(content, python_file.get_class_dict()[class_name].content)
 
     def test_get_function_in_class(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         methods_class = ['__init__', 'method1', 'method2', 'method3']
@@ -336,7 +336,7 @@ class MyTestCase(unittest.TestCase):
          for class_object in p1.get_class_dict().values()]
 
     def test_get_function_content_from_class_content(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         p1 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
@@ -361,7 +361,7 @@ class MyTestCase(unittest.TestCase):
         self.assertListEqual(p1.get_class_dict()['Class2'].get_methode_dict()['method2'].content, method2_content)
 
     def test_get_param_list_from_class_content(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         p1 = PythonFiles('Initial_project_example/SeveralClassFileExample.py')
@@ -380,7 +380,7 @@ class MyTestCase(unittest.TestCase):
                              ['self', 'attr1', 'attr2'])
 
     def test_write_complete_docstring(self):
-        if getcwd() == "D:\python\createDocstringHelper":
+        if not getcwd().split('\\').__contains__('tests'):
             chdir("tests")
 
         if isdir('modified_project_example'):
