@@ -43,6 +43,28 @@ def other_function(param1, param2='foo'):
 
 
 class Class3:
+    """
+    <TO BE COMPLETED>
+
+    Parameters
+    __________
+    self : <TO BE COMPLETED>
+
+    attr1 : <TO BE COMPLETED>
+
+    attr2 : <TO BE COMPLETED>
+
+    Methods
+    _______
+    __init__ : <TO BE COMPLETED>
+
+    method1 : <TO BE COMPLETED>
+
+    method2 : <TO BE COMPLETED>
+
+    method3 : <TO BE COMPLETED>
+    """
+
     def __init__(self, attr1, attr2):
         self.param1 = attr1
         self.param2 = attr2

@@ -1,7 +1,7 @@
 from python_objects.Function import Function
 from common.OverallFunctions import get_object_name_from_regex, add_content_to_string_from_list, get_indentation
 from common.Section import Section
-from re import compile
+from re import compile, match
 
 
 class Class:
@@ -37,6 +37,7 @@ class Class:
 
     write_docstring : write the class documentation
     """
+
     def __init__(self, class_name):
         self.__class_name = class_name
         self.__methode_dict = {}
@@ -110,7 +111,6 @@ class Class:
         self.__methode_dict[function_name].content = []
         start_flag = compile('^ *' + 'def ' + function_name + '\(.*: *$')
         stop_flag = compile('^' + get_indentation(self.content) + '[a-zA-Z0-9]' + '.*$')
-
         self.__methode_dict[function_name].content = add_content_to_string_from_list(self.content,
                                                                                      self.__methode_dict[
                                                                                          function_name].content,

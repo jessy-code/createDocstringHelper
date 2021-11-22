@@ -3,7 +3,7 @@ from python_objects.Class import Class
 from python_objects.Function import Function
 from shutil import move
 from common.OverallFunctions import extract_name_in_line, test_regex, add_content_to_string_from_list, \
-    get_object_name_from_regex
+    get_object_name_from_regex, check_if_python_class_contains_docstring
 
 
 class PythonFiles:
@@ -306,9 +306,10 @@ class PythonFiles:
                             class_name = line.split('class ')[1].split(':')[0]
                         except:
                             class_name = line.split('class ')[1].split('(')[0]
-                        self.init_class_docstring(class_name)
 
-                        file.write(self.build_string_class_with_docstring(class_name))
+                        self.init_class_docstring(class_name)
+                        if not check_if_python_class_contains_docstring(self.__class_dict[class_name].content):
+                            file.write(self.build_string_class_with_docstring(class_name))
 
                     if flag and match('^ .*def .*$', line):
                         method_name = line.split('def ')[1].split('(')[0]

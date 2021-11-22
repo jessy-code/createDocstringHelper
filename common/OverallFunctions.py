@@ -98,7 +98,7 @@ def remove_brackets_to_string(string):
     string : the string in which we want to remove brackets
 
     """
-    return string.replace('(', '').replace(')','')
+    return string.replace('(', '').replace(')', '')
 
 
 def get_indentation(string_list):
@@ -111,9 +111,17 @@ def get_indentation(string_list):
 
     """
     indented_lines = [line for line in string_list if
-                      match(r'^ .*[a-zA-Z0-9]*$', line) and string_list.index(line) > 0]
+                      match(r'^ .*[a-zA-Z0-9\"\']*$', line) and string_list.index(line) > 0]
     try:
-
-        return resplit(r'[a-z0-9]', indented_lines[0], flags=IGNORECASE)[0]
+        return resplit(r'[a-z0-9\"\']', indented_lines[0], flags=IGNORECASE)[0]
     except IndexError:
         raise
+
+
+def check_if_python_class_contains_docstring(class_content):
+    for line in class_content:
+        if match('^ .*def', line):
+            return False
+        if match('^ .*"""', line) or match("^ .*'''", line):
+            return True
+    return False
