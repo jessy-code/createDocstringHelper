@@ -22,23 +22,6 @@ def read_file_content(file_path):
 
 class MyTestCase(unittest.TestCase):
 
-    def test_project(self):
-        if not getcwd().split('\\').__contains__('tests'):
-            chdir("tests")
-        p1 = Project('Initial_project_example')
-        real_list_file = ['Initial_project_example/OneClassFileExample.py',
-                          'Initial_project_example/SeveralClassFileExample.py',
-                          'Initial_project_example/OnlyAClassFileExample.py']
-        list_file_get_by_function = p1.get_py_file_list()
-
-        real_list_file.sort()
-        list_file_get_by_function.sort()
-
-        self.assertListEqual(real_list_file, list_file_get_by_function)
-
-        with self.assertRaises(FileNotFoundError):
-            p2 = Project('doesnotexist')
-
     def test_section(self):
         param_list_example = ['param1', 'param2', 'param3']
         method_list_example = ['foo1', 'foo2']
@@ -456,6 +439,33 @@ class MyTestCase(unittest.TestCase):
 
         self.assertListEqual([elt for elt in several_class_file_example if elt != '\n'],
                              [elt for elt in p1.get_python_file_content() if elt != '\n'])
+
+        rmtree('modified_project_example')
+
+    def test_project(self):
+        if not getcwd().split('\\').__contains__('tests'):
+            chdir("tests")
+
+        if isdir('modified_project_example'):
+            rmtree('modified_project_example')
+
+        copytree('Initial_project_example', 'modified_project_example')
+
+        p1 = Project('modified_project_example')
+        real_list_file = ['modified_project_example/OneClassFileExample.py',
+                          'modified_project_example/SeveralClassFileExample.py',
+                          'modified_project_example/OnlyAClassFileExample.py']
+        list_file_get_by_function = p1.get_py_file_list()
+
+        real_list_file.sort()
+        list_file_get_by_function.sort()
+
+        self.assertListEqual(real_list_file, list_file_get_by_function)
+
+        with self.assertRaises(FileNotFoundError):
+            p2 = Project('doesnotexist')
+
+        p1.document_project()
 
         rmtree('modified_project_example')
 

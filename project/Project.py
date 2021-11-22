@@ -1,4 +1,6 @@
-import os
+from os.path import isfile, isdir
+from os import listdir
+from file.PythonFiles import PythonFiles
 
 
 class Project:
@@ -39,6 +41,7 @@ class Project:
         """
         self.__root_path = root_path
         self.__py_file_list = []
+        self.__internal_folders = []
 
         self.__call__(root_path)
 
@@ -59,8 +62,11 @@ class Project:
         """
         self.__root_path = root_path
         try:
-            self.__py_file_list = [root_path + '/' + cur_file for cur_file in os.listdir(root_path)
-                                   if cur_file.endswith('.py') and os.path.isfile(root_path + '/' + cur_file)]
+            self.__py_file_list = [root_path + '/' + cur_file for cur_file in listdir(root_path)
+                                   if cur_file.endswith('.py') and isfile(root_path + '/' + cur_file)]
+
+            self.__internal_folders = [Project(root_path + '/' + cur_file) for cur_file in listdir(root_path)
+                                       if isdir(root_path + '/' + cur_file)]
 
         except FileNotFoundError:
             raise
@@ -112,3 +118,16 @@ class Project:
 
         """
         return self.__py_file_list
+
+    def document_project(self):
+        for project in self.__internal_folders:
+            project.document_project()
+
+        for py_file in self.__py_file_list:
+            p1 = PythonFiles(py_file)
+
+            p1.get_first_level_function_in_file()
+            p1.get_class_in_file()
+
+            p1.write_first_level_function_docstring()
+            p1.write_class_docstring()
