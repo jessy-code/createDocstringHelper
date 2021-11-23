@@ -14,3 +14,5 @@ optional arguments:
     # to initialize docstring on AnyPyFile.py file:
     python createDocStringHelper AnyPyFile.py
     
+    # to initialize docstring on all py file of project1 project:
+    python createDocStringHelper project1
