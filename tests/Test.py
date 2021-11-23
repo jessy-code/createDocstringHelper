@@ -452,20 +452,42 @@ class MyTestCase(unittest.TestCase):
         copytree('Initial_project_example', 'modified_project_example')
 
         p1 = Project('modified_project_example')
+        p1.document_project()
         real_list_file = ['modified_project_example/OneClassFileExample.py',
                           'modified_project_example/SeveralClassFileExample.py',
-                          'modified_project_example/OnlyAClassFileExample.py']
+                          'modified_project_example/OnlyAClassFileExample.py',
+                          'modified_project_example/test_project/ToCheckProjectParsing.py',
+                          'modified_project_example/test_project/another_directory/ToCheckProjectParsing.py']
+
+        documented_project_file_list = ['documented_project_recursive_example/OneClassFileExample.py',
+                                        'documented_project_recursive_example/SeveralClassFileExample.py',
+                                        'documented_project_recursive_example/OnlyAClassFileExample.py',
+                                        'documented_project_recursive_example/test_project/ToCheckProjectParsing.py',
+                                        'documented_project_recursive_example/test_project/another_directory'
+                                        '/ToCheckProjectParsing.py']
+
         list_file_get_by_function = p1.get_py_file_list()
 
         real_list_file.sort()
+        documented_project_file_list.sort()
         list_file_get_by_function.sort()
 
-        self.assertListEqual(real_list_file, list_file_get_by_function)
+        count = 0
+        for file in real_list_file:
+            file_content1 = []
+            file_content2 = []
+
+            with open(file, 'r') as cur_file:
+                file_content1 = [line for line in cur_file.readlines() if line != 'n']
+            with open(documented_project_file_list[count], 'r') as cur_file:
+                file_content2 = [line for line in cur_file.readlines() if line != 'n']
+
+            self.assertListEqual(file_content1, file_content2)
+
+            count += 1
 
         with self.assertRaises(FileNotFoundError):
             p2 = Project('doesnotexist')
-
-        p1.document_project()
 
         rmtree('modified_project_example')
 

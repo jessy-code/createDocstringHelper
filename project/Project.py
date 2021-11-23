@@ -5,40 +5,28 @@ from file.PythonFiles import PythonFiles
 
 class Project:
     """
-    <TO BE COMPLETED>
+    Class design to modelling a complete python project
 
     Parameters
     __________
-    self : <TO BE COMPLETED>
-
-    root_path : <TO BE COMPLETED>
+    root_path : the root path of the python project
 
     Methods
     _______
-    __init__ : <TO BE COMPLETED>
+    __call__ : parse python project and initialize needed objects for documentation
 
-    __call__ : <TO BE COMPLETED>
+    set_root_path : set the project root path
 
-    set_root_path : <TO BE COMPLETED>
+    get_root_path : return the project root path
 
-    get_root_path : <TO BE COMPLETED>
+    set_py_file_list : set the python file list
 
-    set_py_file_list : <TO BE COMPLETED>
+    get_py_file_list : return the python file list
 
-    get_py_file_list : <TO BE COMPLETED>
+    document_project : initialize docstring documentation for all project
     """
 
     def __init__(self, root_path):
-        """
-        <TO BE COMPLETED>
-
-        Parameters
-        __________
-        self : <TO BE COMPLETED>
-
-        root_path : <TO BE COMPLETED>
-
-        """
         self.__root_path = root_path
         self.__py_file_list = []
         self.__internal_folders = []
@@ -47,17 +35,15 @@ class Project:
 
     def __call__(self, root_path):
         """
-        <TO BE COMPLETED>
+        Parse python project and initialize needed objects for documentation.
 
         Parameters
         __________
-        self : <TO BE COMPLETED>
-
-        root_path : <TO BE COMPLETED>
+        root_path : the root path of the python project
 
         Raises
         ______
-        FileNotFoundError : <TO BE COMPLETED>
+        FileNotFoundError : raised if the root path cannot be found
 
         """
         self.__root_path = root_path
@@ -73,53 +59,42 @@ class Project:
 
     def set_root_path(self, root_path):
         """
-        <TO BE COMPLETED>
+        Set the project root path.
 
         Parameters
         __________
-        self : <TO BE COMPLETED>
-
-        root_path : <TO BE COMPLETED>
+        root_path : the root path of the python project
 
         """
         self.__root_path = root_path
 
     def get_root_path(self):
         """
-        <TO BE COMPLETED>
-
-        Parameters
-        __________
-        self : <TO BE COMPLETED>
-
+        Return the project root path
         """
         return self.__root_path
 
     def set_py_file_list(self, py_file_list):
         """
-        <TO BE COMPLETED>
+        Set the python file list.
 
         Parameters
         __________
-        self : <TO BE COMPLETED>
-
-        py_file_list : <TO BE COMPLETED>
+        py_file_list : the new python file list
 
         """
         self.__py_file_list = py_file_list
 
     def get_py_file_list(self):
         """
-        <TO BE COMPLETED>
-
-        Parameters
-        __________
-        self : <TO BE COMPLETED>
-
+        Return the python file list.
         """
         return self.__py_file_list
 
     def document_project(self):
+        """
+        Initialize docstring documentation for all project.
+        """
         for project in self.__internal_folders:
             project.document_project()
 
