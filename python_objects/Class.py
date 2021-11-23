@@ -1,7 +1,8 @@
-from python_objects.Function import Function
+from re import compile
+
 from common.OverallFunctions import get_object_name_from_regex, add_content_to_string_from_list, get_indentation
 from common.Section import Section
-from re import compile, match
+from python_objects.Function import Function
 
 
 class Class:

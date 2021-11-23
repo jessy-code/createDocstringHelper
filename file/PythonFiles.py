@@ -70,7 +70,7 @@ class PythonFiles:
             with open(self.__python_path, 'r') as python_file:
                 self.__python_file_content = python_file.readlines()
 
-        except (FileNotFoundError):
+        except FileNotFoundError:
             raise
 
     def get_python_file_content(self):

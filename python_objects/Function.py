@@ -42,6 +42,7 @@ class Function:
 
     write_docstring : write the documentation
     """
+
     def __init__(self, function_name):
         self.__function_name = function_name
         self.__param_list = []
@@ -208,16 +209,19 @@ class Function:
         """
         Write the documentation
         """
-        self.__docstring += get_indentation(self.content) + '"""\n' + get_indentation(self.content) + '<TO BE COMPLETED>\n'
+        self.__docstring += get_indentation(self.content) + '"""\n' + get_indentation(
+            self.content) + '<TO BE COMPLETED>\n'
 
         if self.__param_list:
             self.__docstring += Section('Parameters', self.__param_list,
                                         offset=get_indentation(self.content)).get_writable_section()
 
         if self.__returns:
-            self.__docstring += Section('Returns', self.__returns, offset=get_indentation(self.content)).get_writable_section()
+            self.__docstring += Section('Returns', self.__returns,
+                                        offset=get_indentation(self.content)).get_writable_section()
 
         if self.__raises:
-            self.__docstring += Section('Raises', self.__raises, offset=get_indentation(self.content)).get_writable_section()
+            self.__docstring += Section('Raises', self.__raises,
+                                        offset=get_indentation(self.content)).get_writable_section()
 
         self.__docstring += '\n' + get_indentation(self.content) + '"""\n'

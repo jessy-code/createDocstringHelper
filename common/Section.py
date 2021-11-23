@@ -20,7 +20,9 @@ class Section:
 
     set_section_title : set the section title
     """
-    def __init__(self, section_title, object_list=[], offset=''):
+    def __init__(self, section_title, object_list=None, offset=''):
+        if object_list is None:
+            object_list = []
         self.__section_title = section_title
         self.__object_list = object_list
         self.__writable_section = ''
