@@ -101,8 +101,18 @@ class Project:
         for py_file in self.__py_file_list:
             p1 = PythonFiles(py_file)
 
-            p1.get_first_level_function_in_file()
-            p1.get_class_in_file()
+            first_level_function = p1.get_first_level_function_in_file()
+            class_dict = p1.get_class_in_file()
 
-            p1.write_first_level_function_docstring()
-            p1.write_class_docstring()
+
+            try:
+                p1.write_first_level_function_docstring()
+            except KeyError:
+                print('No first level function')
+                pass
+
+            try:
+                p1.write_class_docstring()
+            except KeyError:
+                print('No class')
+                pass

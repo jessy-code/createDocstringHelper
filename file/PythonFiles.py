@@ -260,11 +260,15 @@ class PythonFiles:
         class_name : the class we want to document
 
         """
-        self.get_class_content(class_name)
-        self.__class_dict[class_name].get_function_in_class()
-        self.__class_dict[class_name].prepare_docstring_to_all_methods()
-        self.__class_dict[class_name].get_param_list_from_class_content()
-        self.__class_dict[class_name].write_docstring()
+        try:
+            self.get_class_content(class_name)
+            self.__class_dict[class_name].get_function_in_class()
+            self.__class_dict[class_name].prepare_docstring_to_all_methods()
+            self.__class_dict[class_name].get_param_list_from_class_content()
+            self.__class_dict[class_name].write_docstring()
+        except KeyError:
+            print('No class in the file')
+            pass
 
     def build_string_class_with_docstring(self, class_name):
         """
@@ -302,10 +306,7 @@ class PythonFiles:
                     if match('^class .*:.*$', line):
                         flag = True
 
-                        try:
-                            class_name = line.split('class ')[1].split(':')[0]
-                        except:
-                            class_name = line.split('class ')[1].split('(')[0]
+                        class_name = extract_name_in_line(line)
 
                         self.init_class_docstring(class_name)
                         if not check_if_python_class_contains_docstring(self.__class_dict[class_name].content):
