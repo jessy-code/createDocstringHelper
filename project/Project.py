@@ -52,7 +52,8 @@ class Project:
                                    if cur_file.endswith('.py') and isfile(root_path + '/' + cur_file)]
 
             self.__internal_folders = [Project(root_path + '/' + cur_file) for cur_file in listdir(root_path)
-                                       if isdir(root_path + '/' + cur_file)]
+                                       if isdir(root_path + '/' + cur_file) and not root_path.__contains__(
+                    "extendedlibraries") and not root_path.__contains__(".idea")]
 
         except FileNotFoundError:
             raise
@@ -103,7 +104,6 @@ class Project:
 
             first_level_function = p1.get_first_level_function_in_file()
             class_dict = p1.get_class_in_file()
-
 
             try:
                 p1.write_first_level_function_docstring()
